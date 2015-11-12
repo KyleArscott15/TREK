@@ -1,0 +1,1141 @@
+Diff for the above mentioned files:
+Only in ../trek: application_specific_definitions.cpp
+diff -rubB ../trek/application_specific_definitions.h /home/kyle/backup/trek/Sep-26-22_19/application_specific_definitions.h
+--- ../trek/application_specific_definitions.h	2015-10-12 23:04:37.339604298 -0400
++++ /home/kyle/backup/trek/Sep-26-22_19/application_specific_definitions.h	2015-09-26 22:19:16.125648096 -0400
+@@ -1,6 +1,3 @@
+-#ifndef APPLICATION_SPECIFIC_H
+-#define APPLICATION_SPECIFIC_H
+-
+ #include <top_level_inclusions.h>
+ 
+ //http://www.patorjk.com/software/taag/#p=display&f=Alpha&t=TREK
+@@ -75,5 +72,3 @@
+ 	printf("Rete match algorithm: The eval section of rules are compiled into a tree (during program compile-time) to speed-up rule inferencing at run-time.\n");
+ 	printf("\n\n--------------END TREK Expert System Documentation------------------\n\n");
+ }
+-
+-#endif
+Only in ../trek: application_specific_definitions.o
+diff -rubB ../trek/b /home/kyle/backup/trek/Sep-26-22_19/b
+--- ../trek/b	2015-10-09 20:41:17.919969460 -0400
++++ /home/kyle/backup/trek/Sep-26-22_19/b	2015-09-26 22:19:16.125648096 -0400
+@@ -4,14 +4,8 @@
+ 
+ cd $TREK_DIR
+ 
+-# prepare to backup on remote MOORE server at mcmaster
+-MOORE_MOUNTPOINT=~/projects/moore
+-#sshfs $MOORE: $MOORE_MOUNTPOINT
+-#sleep 2
+-
+ BACKUP_DIR_NAME=~/backup/trek/`date +"%b-%d-%H_%M"`
+-BACKUP_DIR_NAME_REMOTE_SERVER=$MOORE_MOUNTPOINT/backups/trek
+ echo $BACKUP_DIR_NAME
+ mkdir $BACKUP_DIR_NAME
+ cp -vr trek/* $BACKUP_DIR_NAME
+-cp -vr trek/* $BACKUP_DIR_NAME_REMOTE_SERVER 
++
+diff -rubB ../trek/backup.sh /home/kyle/backup/trek/Sep-26-22_19/backup.sh
+--- ../trek/backup.sh	2015-10-09 20:41:17.919969460 -0400
++++ /home/kyle/backup/trek/Sep-26-22_19/backup.sh	2015-09-26 22:19:16.125648096 -0400
+@@ -4,14 +4,8 @@
+ 
+ cd $TREK_DIR
+ 
+-# prepare to backup on remote MOORE server at mcmaster
+-MOORE_MOUNTPOINT=~/projects/moore
+-#sshfs $MOORE: $MOORE_MOUNTPOINT
+-#sleep 2
+-
+ BACKUP_DIR_NAME=~/backup/trek/`date +"%b-%d-%H_%M"`
+-BACKUP_DIR_NAME_REMOTE_SERVER=$MOORE_MOUNTPOINT/backups/trek
+ echo $BACKUP_DIR_NAME
+ mkdir $BACKUP_DIR_NAME
+ cp -vr trek/* $BACKUP_DIR_NAME
+-cp -vr trek/* $BACKUP_DIR_NAME_REMOTE_SERVER 
++
+diff -rubB ../trek/frame.cpp /home/kyle/backup/trek/Sep-26-22_19/frame.cpp
+--- ../trek/frame.cpp	2015-10-12 21:44:15.715807069 -0400
++++ /home/kyle/backup/trek/Sep-26-22_19/frame.cpp	2015-09-26 22:19:16.125648096 -0400
+@@ -1,12 +1,6 @@
+ #include <frame.h>
+-
+-int Frame::setName(char * frame_name){
+-	int ret = name.length();
+-	name = std::string(frame_name);
+-	return ret;
+-}
+-
+-int Frame::addSlot(char* slot_name, char* unit, All_type default_val){
+-	Slot slot(slot_name, unit, default_val);
+-	slots.push_back(slot);
++/*
++Frame::Frame(){
++	name = std::string("hi");
+ }
++*/
+diff -rubB ../trek/frame.h /home/kyle/backup/trek/Sep-26-22_19/frame.h
+--- ../trek/frame.h	2015-10-12 22:11:24.467738573 -0400
++++ /home/kyle/backup/trek/Sep-26-22_19/frame.h	2015-09-26 22:19:16.125648096 -0400
+@@ -11,35 +11,27 @@
+ 
+ class Slot{
+ public:
+-	Slot(char* slot_name, char* slot_unit, All_type slot_default_val){
+-		name = std::string(slot_name);
+-		unit = std::string(unit);
+-		default_val = slot_default_val;
+-	};
++	Slot(){value.i = 4;};
+ 	virtual ~Slot(){};
+ 
+ 	// return value in either an All_type returned or modify given pointer
+ 	// If the pointer option is used then the returned All_type returns errors
+-	All_type get(SLOT_INFO get_type, All_type *at=NULL);
++	All_type get(SLOT_INFO, All_type *at=NULL);
+ 
+ 	// set a parameter of this slot based on what's in the All_type
+ 	int set(SLOT_INFO set_type, All_type *at);
+ 
+ //	boost::function() callback_procedure; // pg. 234 BES:AT
+ private:
+-	std::string name;
+ 	std::string unit; //ex. "km"
+ 	All_type value;
+-	All_type default_val; 
+ };
+ 
+ class Frame{
+ public:
+ 	//Frame();
+ 	//virtual ~Frame(){};
+-	 std::string getName(){return name;};
+ 	int setName(char* frame_name);
+-	int addSlot(char* slot_name, char* unit, All_type default_val);
+ private:
+ 	std::vector<Slot> slots;
+ 	std::string name;
+Binary files ../trek/frame.o and /home/kyle/backup/trek/Sep-26-22_19/frame.o differ
+Only in ../trek: knowledge_base_backup.cpp
+Only in ../trek: knowledge_base.cpp
+Only in ../trek: knowledge_base.cpp.unc-backup~
+Only in ../trek: knowledge_base.cpp.unc-backup.md5~
+Only in ../trek: knowledge_base.h
+Only in ../trek: knowledge_base.o
+Only in /home/kyle/backup/trek/Sep-26-22_19/: knowledge_base.txt
+diff -rubB ../trek/main.cpp /home/kyle/backup/trek/Sep-26-22_19/main.cpp
+--- ../trek/main.cpp	2015-10-12 22:36:51.231674365 -0400
++++ /home/kyle/backup/trek/Sep-26-22_19/main.cpp	2015-09-26 22:19:16.125648096 -0400
+@@ -1,9 +1,29 @@
+ #include <top_level_inclusions.h>
+ #include <application_specific_definitions.h>
+-#include <state.h>
++//#include <state.h>
+ #include <frame.h>
+-#include <knowledge_base.h>
+-#include <prompt.h>
++
++class Rule{
++public:
++	Rule();
++	~Rule(){};
++	int setPrompt(char *input_prompt);
++	int setFormat(char *input_format);
++	std::string prompt;
++	std::string format;
++protected:
++private:
++
++};
++Rule::Rule(){
++}
++int Rule::setPrompt(char *input_prompt){
++	prompt = std::string(input_prompt);
++}
++int Rule::setFormat(char *input_format){
++	format = std::string(input_format);
++}
++
+ int begin_consulation(){
+ 	printf("Beginning consulation...\n");
+ 	printf("=================================================\n");
+@@ -19,16 +39,14 @@
+ }
+ 
+ int infer_next_rule(Rule **rule){
+-	//Rule *r = new Rule(); // xxx KA memory only for testing
+-	//r->setPrompt((char*)"Are you feeling well today?\n");
+-	//r->setFormat((char*)"%s");
+-	*rule = NULL;
++	Rule *r = new Rule(); // xxx KA memory only for testing
++	r->setPrompt((char*)"Are you feeling well today?\n");
++	r->setFormat((char*)"%s");
++	*rule = r;
+ }
+ 
+ int main(){
+ 
+-	KnowledgeBase kb;
+-
+ 	//State *s = new State();
+ 
+ 	welcome();
+Binary files ../trek/main.o and /home/kyle/backup/trek/Sep-26-22_19/main.o differ
+diff -rubB ../trek/Makefile /home/kyle/backup/trek/Sep-26-22_19/Makefile
+--- ../trek/Makefile	2015-10-12 23:14:20.983579753 -0400
++++ /home/kyle/backup/trek/Sep-26-22_19/Makefile	2015-09-26 22:19:16.125648096 -0400
+@@ -4,11 +4,11 @@
+ CC=gcc
+ CXX=g++
+ RM=rm -f
+-CPPFLAGS=-I. -std=gnu++0x #-Wall -Weffc++
++CPPFLAGS=-I. -std=gnu++0x #-Wall
+ 
+ FINAL_EXECUTABLE_NAME=trek
+ 
+-SRCS=main.cpp state.cpp frame.cpp working_memory.cpp knowledge_base.cpp application_specific_definitions.cpp 
++SRCS=main.cpp state.cpp frame.cpp
+ OBJS=$(subst .cpp,.o,$(SRCS))
+ 
+ all: trek
+Only in ../trek: prompt.c
+Only in ../trek: prompt.h
+diff -rubB ../trek/state.cpp /home/kyle/backup/trek/Sep-26-22_19/state.cpp
+--- ../trek/state.cpp	2015-10-09 19:25:58.372159527 -0400
++++ /home/kyle/backup/trek/Sep-26-22_19/state.cpp	2015-09-26 22:19:16.125648096 -0400
+@@ -1,50 +1 @@
+ #include <state.h>
+-
+-State::State(){}
+-State::~State(){}
+-
+-//------------------------------------------------------------------------------
+-
+-IntegerState::IntegerState(){
+-}
+-IntegerState::~IntegerState(){
+-}
+-
+-STATE_TYPE IntegerState::getStateType(){
+-	return INTEGER_STATE;
+-}
+-
+-//------------------------------------------------------------------------------
+-
+-RangeState::RangeState(int min, int max) : min_value(min), max_value(max){
+-}
+-RangeState::~RangeState(){
+-}
+-
+-STATE_TYPE RangeState::getStateType(){
+-	return RANGE_STATE;
+-}
+-
+-int RangeState::setValue(int value){
+-	if(value > max_value  || value < min_value){
+-		return -1;
+-	}else{
+-		state_value = value;
+-	}
+-}
+-
+-//------------------------------------------------------------------------------
+-
+-BooleanState::BooleanState() : RangeState(0,1) {
+-}
+-
+-BooleanState::~BooleanState() {
+-}
+-
+-STATE_TYPE BooleanState::getStateType(){
+-	return BOOLEAN_STATE;
+-}
+-
+-//------------------------------------------------------------------------------
+-
+-
+diff -rubB ../trek/state.h /home/kyle/backup/trek/Sep-26-22_19/state.h
+--- ../trek/state.h	2015-10-09 19:24:04.320164323 -0400
++++ /home/kyle/backup/trek/Sep-26-22_19/state.h	2015-09-26 22:19:16.125648096 -0400
+@@ -29,9 +30,14 @@
+ 	INVALID_STATE = 0,
+ 	INTEGER_STATE,
+ 	STRING_STATE,
++	MULTI_STATE,
++	NAME_STATE,
+ 	BOOLEAN_STATE,
+ 	RANGE_STATE,
+-	MULTI_STATE // 2 or more of the following states rolled into one
++	FISHING_STATE,
++	LAW_STATE,
++	NUMBER_OF_NIGHTS_STATE
++	 
+ };
+ 
+ enum TIER_TYPE
+@@ -42,25 +48,39 @@
+ 	IMPLEMENTED_TIER
+ };
+ 
++
++std::tuple<int, STATE_TYPE> tier_states[] = {
++	std::tuple<int, STATE_TYPE>(ABSTRACT_DATA_TIER, INTEGER_STATE),
++	std::tuple<int, STATE_TYPE>(ABSTRACT_DATA_TIER, STRING_STATE),
++	std::tuple<int, STATE_TYPE>(ABSTRACT_DATA_TIER, MULTI_STATE),
++	std::tuple<int, STATE_TYPE>(ABSTRACT_DATA_USE_TIER, NAME_STATE),
++	std::tuple<int, STATE_TYPE>(ABSTRACT_DATA_USE_TIER, BOOLEAN_STATE),
++	std::tuple<int, STATE_TYPE>(ABSTRACT_DATA_USE_TIER, RANGE_STATE),
++	std::tuple<int, STATE_TYPE>(IMPLEMENTED_TIER, FISHING_STATE),
++	std::tuple<int, STATE_TYPE>(IMPLEMENTED_TIER, LAW_STATE),
++	std::tuple<int, STATE_TYPE>(IMPLEMENTED_TIER, NUMBER_OF_NIGHTS_STATE)
++};
++
+ class State{
+ public:
+ 	State();
+-	~State();
+-        virtual STATE_TYPE getStateType()=0;
++	~State(){};
++	//virtual STATE_TYPE getStateType(TIER_TYPE tier_level) = 0;
+ protected:
+ private:
+-	STATE_TYPE state_type;
+-	All_type state_value; // only has a value if STATE_TYPE != MULTI_STATE
+-	std::vector<State*> sub_states; // only used if STATE_TYPE == MULTI_STATE
+ };
+ 
++State::State(){
++	// no way man
++}
++
+ //------------------------------------------------------------------------------
+ 
+ class IntegerState : public State{
+ public:
+ 	IntegerState();
+-	~IntegerState();
+-	virtual STATE_TYPE getStateType();
++	~IntegerState(){};
++	virtual STATE_TYPE getStateType(TIER_TYPE tier_level);
+ 	virtual int getValue(){return state_value;}
+ 	virtual int setValue()=0;//xxx KA it would make sense to make this non-v
+ 				//irtual, but we want range to limit it now and
+@@ -70,13 +90,24 @@
+ private:
+ };
+ 
++IntegerState::IntegerState(){
++}
++
++STATE_TYPE IntegerState::getStateType(TIER_TYPE tier_level){
++	STATE_TYPE state = INVALID_STATE;
++	if(tier_level == ABSTRACT_DATA_TIER){
++		state = INTEGER_STATE;
++	}
++	return state;
++}
++
+ //------------------------------------------------------------------------------
+ 
+ class RangeState : public IntegerState{
+ public:
+ 	RangeState(int min, int max);
+-	~RangeState();
+-	virtual STATE_TYPE getStateType();
++	~RangeState(){};
++	virtual STATE_TYPE getStateType(TIER_TYPE tier_level);
+ 	virtual int setValue(int value);
+ protected:
+ private:
+@@ -84,17 +115,40 @@
+ 	int max_value;
+ };
+ 
+-//------------------------------------------------------------------------------
++RangeState::RangeState(int min, int max) : min_value(min), max_value(max){
++}
++
++STATE_TYPE RangeState::getStateType(TIER_TYPE tier_level){
++	return RANGE_STATE;
++}
++
++int RangeState::setValue(int value){
++	if(value > max_value  || value < min_value){
++		return -1;
++	}else{
++		state_value = value;
++	}
++}
+ 
++//------------------------------------------------------------------------------
++//*
+ class BooleanState : public RangeState{
+ public:
+ 	BooleanState();
+-	~BooleanState();
+-	virtual STATE_TYPE getStateType();
++	~BooleanState(){};
++	virtual STATE_TYPE getStateType(TIER_TYPE tier_level);
+ protected:
+ private:
+ };
+ 
++BooleanState::BooleanState() : RangeState(0,1) {
++}
++
++STATE_TYPE BooleanState::getStateType(TIER_TYPE tier_level){
++	return BOOLEAN_STATE;
++}
++//*/
+ //------------------------------------------------------------------------------
+ 
++
+ #endif
+Binary files ../trek/state.o and /home/kyle/backup/trek/Sep-26-22_19/state.o differ
+diff -rubB ../trek/top_level_inclusions.h /home/kyle/backup/trek/Sep-26-22_19/top_level_inclusions.h
+--- ../trek/top_level_inclusions.h	2015-10-14 01:33:07.591800242 -0400
++++ /home/kyle/backup/trek/Sep-26-22_19/top_level_inclusions.h	2015-09-26 22:19:16.129648096 -0400
+@@ -7,8 +7,6 @@
+ #include <string>
+ #include <vector>
+ 
+-
+-#define GENERIC_ERROR           (-1)
+ #define STRING_LENGTH           (128)
+ #define RESPONSE_LENGTH         (64)
+ #define SCANF_FORMAT_LENGTH     (16)
+@@ -20,38 +18,24 @@
+ enum DATA_TYPE{
+ 	TYPE_INVALID = -1,
+ 	TYPE_BOOL = 0,
+-	TYPE_INTEGER = 1,
+-	TYPE_STRING = 2,
+-	TYPE_STATE = 3 // void* in All_type is for this purpose
++	TYPE_INT = 1,
++	TYPE_STRING = 2
+ };
+ 
+-class All_type{
+-public:
++union All_type{
++	std::string s;
++	int i;
++	bool b;	
++	DATA_TYPE type;
++
+ 	All_type(){
+ 		i = INVALID_INTEGER;
+ 		b = INVALID_BOOL;
+ 		type = TYPE_INVALID;
+ 	}
+ 	
+-	All_type(int value){
+-		type = TYPE_INTEGER;
+-		i = value;
+-	}
+-
+-	All_type(char* str){
+-		type = TYPE_STRING;
+-		s = std::string(str);
+-	}
+-
+ 	~All_type(){
+ 	}
+-
+-	std::string s;
+-	int i;
+-	bool b;	
+-	void *state;
+-	DATA_TYPE type;
+-private:
+ };
+ 
+ #endif // STANDARD_INCLUSION_H
+Only in /home/kyle/backup/trek/Sep-26-22_19/: trek
+diff -rubB ../trek/trek.patch /home/kyle/backup/trek/Sep-26-22_19/trek.patch
+--- ../trek/trek.patch	2015-10-27 13:45:07.748612098 -0400
++++ /home/kyle/backup/trek/Sep-26-22_19/trek.patch	2015-09-26 22:19:16.129648096 -0400
+@@ -1,454 +1,252 @@
+ Diff for the above mentioned files:
+-Only in ../trek: application_specific_definitions.cpp
+-diff -rubB ../trek/application_specific_definitions.h /home/kyle/backup/trek/Sep-26-22_19/application_specific_definitions.h
+---- ../trek/application_specific_definitions.h	2015-10-12 23:04:37.339604298 -0400
+-+++ /home/kyle/backup/trek/Sep-26-22_19/application_specific_definitions.h	2015-09-26 22:19:16.125648096 -0400
+-@@ -1,6 +1,3 @@
+--#ifndef APPLICATION_SPECIFIC_H
+--#define APPLICATION_SPECIFIC_H
+--
++Only in /home/kyle/backup/trek/Sep-09-22_20/: f
++Only in ../trek: frame.cpp
++Only in ../trek: frame.h
++Only in ../trek: frame.o
++diff -rubB ../trek/main.cpp /home/kyle/backup/trek/Sep-09-22_20/main.cpp
++--- ../trek/main.cpp	2015-09-26 21:52:54.781582537 -0400
+++++ /home/kyle/backup/trek/Sep-09-22_20/main.cpp	2015-09-09 22:20:49.973407168 -0400
++@@ -1,7 +1,6 @@
+  #include <top_level_inclusions.h>
++ #include <application_specific_definitions.h>
++ //#include <state.h>
++-#include <frame.h>
+  
+- //http://www.patorjk.com/software/taag/#p=display&f=Alpha&t=TREK
+-@@ -75,5 +72,3 @@
+- 	printf("Rete match algorithm: The eval section of rules are compiled into a tree (during program compile-time) to speed-up rule inferencing at run-time.\n");
+- 	printf("\n\n--------------END TREK Expert System Documentation------------------\n\n");
+- }
+--
+--#endif
+-Only in ../trek: application_specific_definitions.o
+-diff -rubB ../trek/b /home/kyle/backup/trek/Sep-26-22_19/b
+---- ../trek/b	2015-10-09 20:41:17.919969460 -0400
+-+++ /home/kyle/backup/trek/Sep-26-22_19/b	2015-09-26 22:19:16.125648096 -0400
+-@@ -4,14 +4,8 @@
+- 
+- cd $TREK_DIR
+- 
+--# prepare to backup on remote MOORE server at mcmaster
+--MOORE_MOUNTPOINT=~/projects/moore
+--#sshfs $MOORE: $MOORE_MOUNTPOINT
+--#sleep 2
+--
+- BACKUP_DIR_NAME=~/backup/trek/`date +"%b-%d-%H_%M"`
+--BACKUP_DIR_NAME_REMOTE_SERVER=$MOORE_MOUNTPOINT/backups/trek
+- echo $BACKUP_DIR_NAME
+- mkdir $BACKUP_DIR_NAME
+- cp -vr trek/* $BACKUP_DIR_NAME
+--cp -vr trek/* $BACKUP_DIR_NAME_REMOTE_SERVER 
+-+
+-diff -rubB ../trek/backup.sh /home/kyle/backup/trek/Sep-26-22_19/backup.sh
+---- ../trek/backup.sh	2015-10-09 20:41:17.919969460 -0400
+-+++ /home/kyle/backup/trek/Sep-26-22_19/backup.sh	2015-09-26 22:19:16.125648096 -0400
+-@@ -4,14 +4,8 @@
+- 
+- cd $TREK_DIR
+- 
+--# prepare to backup on remote MOORE server at mcmaster
+--MOORE_MOUNTPOINT=~/projects/moore
+--#sshfs $MOORE: $MOORE_MOUNTPOINT
+--#sleep 2
+--
+- BACKUP_DIR_NAME=~/backup/trek/`date +"%b-%d-%H_%M"`
+--BACKUP_DIR_NAME_REMOTE_SERVER=$MOORE_MOUNTPOINT/backups/trek
+- echo $BACKUP_DIR_NAME
+- mkdir $BACKUP_DIR_NAME
+- cp -vr trek/* $BACKUP_DIR_NAME
+--cp -vr trek/* $BACKUP_DIR_NAME_REMOTE_SERVER 
+-+
+-diff -rubB ../trek/frame.cpp /home/kyle/backup/trek/Sep-26-22_19/frame.cpp
+---- ../trek/frame.cpp	2015-10-12 21:44:15.715807069 -0400
+-+++ /home/kyle/backup/trek/Sep-26-22_19/frame.cpp	2015-09-26 22:19:16.125648096 -0400
+-@@ -1,12 +1,6 @@
+- #include <frame.h>
+--
+--int Frame::setName(char * frame_name){
+--	int ret = name.length();
+--	name = std::string(frame_name);
+--	return ret;
+--}
+--
+--int Frame::addSlot(char* slot_name, char* unit, All_type default_val){
+--	Slot slot(slot_name, unit, default_val);
+--	slots.push_back(slot);
+-+/*
+-+Frame::Frame(){
+-+	name = std::string("hi");
+- }
+-+*/
+-diff -rubB ../trek/frame.h /home/kyle/backup/trek/Sep-26-22_19/frame.h
+---- ../trek/frame.h	2015-10-12 22:11:24.467738573 -0400
+-+++ /home/kyle/backup/trek/Sep-26-22_19/frame.h	2015-09-26 22:19:16.125648096 -0400
+-@@ -11,35 +11,27 @@
+- 
+- class Slot{
+- public:
+--	Slot(char* slot_name, char* slot_unit, All_type slot_default_val){
+--		name = std::string(slot_name);
+--		unit = std::string(unit);
+--		default_val = slot_default_val;
+--	};
+-+	Slot(){value.i = 4;};
+- 	virtual ~Slot(){};
+- 
+- 	// return value in either an All_type returned or modify given pointer
+- 	// If the pointer option is used then the returned All_type returns errors
+--	All_type get(SLOT_INFO get_type, All_type *at=NULL);
+-+	All_type get(SLOT_INFO, All_type *at=NULL);
+- 
+- 	// set a parameter of this slot based on what's in the All_type
+- 	int set(SLOT_INFO set_type, All_type *at);
+- 
+- //	boost::function() callback_procedure; // pg. 234 BES:AT
+- private:
+--	std::string name;
+- 	std::string unit; //ex. "km"
+- 	All_type value;
+--	All_type default_val; 
+- };
+- 
+- class Frame{
++ class Rule{
+  public:
+- 	//Frame();
+- 	//virtual ~Frame(){};
+--	 std::string getName(){return name;};
+- 	int setName(char* frame_name);
+--	int addSlot(char* slot_name, char* unit, All_type default_val);
+- private:
+- 	std::vector<Slot> slots;
+- 	std::string name;
+-Binary files ../trek/frame.o and /home/kyle/backup/trek/Sep-26-22_19/frame.o differ
+-Only in ../trek: knowledge_base_backup.cpp
+-Only in ../trek: knowledge_base.cpp
+-Only in ../trek: knowledge_base.cpp.unc-backup~
+-Only in ../trek: knowledge_base.cpp.unc-backup.md5~
+-Only in ../trek: knowledge_base.h
+-Only in ../trek: knowledge_base.o
+-Only in /home/kyle/backup/trek/Sep-26-22_19/: knowledge_base.txt
+-diff -rubB ../trek/main.cpp /home/kyle/backup/trek/Sep-26-22_19/main.cpp
+---- ../trek/main.cpp	2015-10-12 22:36:51.231674365 -0400
+-+++ /home/kyle/backup/trek/Sep-26-22_19/main.cpp	2015-09-26 22:19:16.125648096 -0400
+-@@ -1,9 +1,29 @@
+- #include <top_level_inclusions.h>
+- #include <application_specific_definitions.h>
+--#include <state.h>
+-+//#include <state.h>
+- #include <frame.h>
+--#include <knowledge_base.h>
+--#include <prompt.h>
+-+
+-+class Rule{
+-+public:
+-+	Rule();
+-+	~Rule(){};
+-+	int setPrompt(char *input_prompt);
+-+	int setFormat(char *input_format);
+-+	std::string prompt;
+-+	std::string format;
+-+protected:
+-+private:
+-+
+-+};
+-+Rule::Rule(){
+-+}
+-+int Rule::setPrompt(char *input_prompt){
+-+	prompt = std::string(input_prompt);
+-+}
+-+int Rule::setFormat(char *input_format){
+-+	format = std::string(input_format);
+-+}
+-+
++@@ -27,7 +26,6 @@
+  int begin_consulation(){
+  	printf("Beginning consulation...\n");
+  	printf("=================================================\n");
+-@@ -19,16 +39,14 @@
++-	exit(-1); // xxx KA
+  }
+  
+- int infer_next_rule(Rule **rule){
+--	//Rule *r = new Rule(); // xxx KA memory only for testing
+--	//r->setPrompt((char*)"Are you feeling well today?\n");
+--	//r->setFormat((char*)"%s");
+--	*rule = NULL;
+-+	Rule *r = new Rule(); // xxx KA memory only for testing
+-+	r->setPrompt((char*)"Are you feeling well today?\n");
+-+	r->setFormat((char*)"%s");
+-+	*rule = r;
+- }
+- 
+- int main(){
+- 
+--	KnowledgeBase kb;
+--
+- 	//State *s = new State();
+- 
+- 	welcome();
+-Binary files ../trek/main.o and /home/kyle/backup/trek/Sep-26-22_19/main.o differ
+-diff -rubB ../trek/Makefile /home/kyle/backup/trek/Sep-26-22_19/Makefile
+---- ../trek/Makefile	2015-10-12 23:14:20.983579753 -0400
+-+++ /home/kyle/backup/trek/Sep-26-22_19/Makefile	2015-09-26 22:19:16.125648096 -0400
+-@@ -4,11 +4,11 @@
+- CC=gcc
+- CXX=g++
+- RM=rm -f
+--CPPFLAGS=-I. -std=gnu++0x #-Wall -Weffc++
+-+CPPFLAGS=-I. -std=gnu++0x #-Wall
++ // XXX issue: I want to input "no way", but scanf delimits at spaces.
++Only in ../trek: main.o
++diff -rubB ../trek/Makefile /home/kyle/backup/trek/Sep-09-22_20/Makefile
++--- ../trek/Makefile	2015-09-26 22:02:07.137605437 -0400
+++++ /home/kyle/backup/trek/Sep-09-22_20/Makefile	2015-09-09 22:20:49.973407168 -0400
++@@ -8,7 +8,7 @@
+  
+  FINAL_EXECUTABLE_NAME=trek
+  
+--SRCS=main.cpp state.cpp frame.cpp working_memory.cpp knowledge_base.cpp application_specific_definitions.cpp 
+-+SRCS=main.cpp state.cpp frame.cpp
++-SRCS=main.cpp state.cpp frame.cpp
+++SRCS=main.cpp state.cpp
+  OBJS=$(subst .cpp,.o,$(SRCS))
+  
+  all: trek
+-Only in ../trek: prompt.c
+-Only in ../trek: prompt.h
+-diff -rubB ../trek/state.cpp /home/kyle/backup/trek/Sep-26-22_19/state.cpp
+---- ../trek/state.cpp	2015-10-09 19:25:58.372159527 -0400
+-+++ /home/kyle/backup/trek/Sep-26-22_19/state.cpp	2015-09-26 22:19:16.125648096 -0400
+-@@ -1,50 +1 @@
+- #include <state.h>
+--
+--State::State(){}
+--State::~State(){}
+--
+--//------------------------------------------------------------------------------
+--
+--IntegerState::IntegerState(){
+--}
+--IntegerState::~IntegerState(){
+--}
+--
+--STATE_TYPE IntegerState::getStateType(){
+--	return INTEGER_STATE;
+--}
+--
+--//------------------------------------------------------------------------------
+--
+--RangeState::RangeState(int min, int max) : min_value(min), max_value(max){
+--}
+--RangeState::~RangeState(){
+--}
+--
+--STATE_TYPE RangeState::getStateType(){
+--	return RANGE_STATE;
+--}
+--
+--int RangeState::setValue(int value){
+--	if(value > max_value  || value < min_value){
+--		return -1;
+--	}else{
+--		state_value = value;
+--	}
+--}
+--
+--//------------------------------------------------------------------------------
+--
+--BooleanState::BooleanState() : RangeState(0,1) {
+--}
+--
+--BooleanState::~BooleanState() {
+--}
+--
+--STATE_TYPE BooleanState::getStateType(){
+--	return BOOLEAN_STATE;
+--}
+--
+--//------------------------------------------------------------------------------
+--
+--
+-diff -rubB ../trek/state.h /home/kyle/backup/trek/Sep-26-22_19/state.h
+---- ../trek/state.h	2015-10-09 19:24:04.320164323 -0400
+-+++ /home/kyle/backup/trek/Sep-26-22_19/state.h	2015-09-26 22:19:16.125648096 -0400
+-@@ -29,9 +30,14 @@
+- 	INVALID_STATE = 0,
+- 	INTEGER_STATE,
+- 	STRING_STATE,
+-+	MULTI_STATE,
+-+	NAME_STATE,
+- 	BOOLEAN_STATE,
+- 	RANGE_STATE,
+--	MULTI_STATE // 2 or more of the following states rolled into one
+-+	FISHING_STATE,
+-+	LAW_STATE,
+-+	NUMBER_OF_NIGHTS_STATE
+-+	 
+- };
+- 
+- enum TIER_TYPE
+-@@ -42,25 +48,39 @@
+- 	IMPLEMENTED_TIER
+- };
+- 
+-+
+-+std::tuple<int, STATE_TYPE> tier_states[] = {
+-+	std::tuple<int, STATE_TYPE>(ABSTRACT_DATA_TIER, INTEGER_STATE),
+-+	std::tuple<int, STATE_TYPE>(ABSTRACT_DATA_TIER, STRING_STATE),
+-+	std::tuple<int, STATE_TYPE>(ABSTRACT_DATA_TIER, MULTI_STATE),
+-+	std::tuple<int, STATE_TYPE>(ABSTRACT_DATA_USE_TIER, NAME_STATE),
+-+	std::tuple<int, STATE_TYPE>(ABSTRACT_DATA_USE_TIER, BOOLEAN_STATE),
+-+	std::tuple<int, STATE_TYPE>(ABSTRACT_DATA_USE_TIER, RANGE_STATE),
+-+	std::tuple<int, STATE_TYPE>(IMPLEMENTED_TIER, FISHING_STATE),
+-+	std::tuple<int, STATE_TYPE>(IMPLEMENTED_TIER, LAW_STATE),
+-+	std::tuple<int, STATE_TYPE>(IMPLEMENTED_TIER, NUMBER_OF_NIGHTS_STATE)
+-+};
+-+
+- class State{
+- public:
+- 	State();
+--	~State();
+--        virtual STATE_TYPE getStateType()=0;
+-+	~State(){};
+-+	//virtual STATE_TYPE getStateType(TIER_TYPE tier_level) = 0;
+- protected:
+- private:
+--	STATE_TYPE state_type;
+--	All_type state_value; // only has a value if STATE_TYPE != MULTI_STATE
+--	std::vector<State*> sub_states; // only used if STATE_TYPE == MULTI_STATE
+- };
+- 
+-+State::State(){
+-+	// no way man
+-+}
+-+
+- //------------------------------------------------------------------------------
+- 
+- class IntegerState : public State{
+- public:
+- 	IntegerState();
+--	~IntegerState();
+--	virtual STATE_TYPE getStateType();
+-+	~IntegerState(){};
+-+	virtual STATE_TYPE getStateType(TIER_TYPE tier_level);
+- 	virtual int getValue(){return state_value;}
+- 	virtual int setValue()=0;//xxx KA it would make sense to make this non-v
+- 				//irtual, but we want range to limit it now and
+-@@ -70,13 +90,24 @@
+- private:
+- };
+- 
+-+IntegerState::IntegerState(){
+-+}
+-+
+-+STATE_TYPE IntegerState::getStateType(TIER_TYPE tier_level){
+-+	STATE_TYPE state = INVALID_STATE;
+-+	if(tier_level == ABSTRACT_DATA_TIER){
+-+		state = INTEGER_STATE;
+-+	}
+-+	return state;
+-+}
+-+
+- //------------------------------------------------------------------------------
+- 
+- class RangeState : public IntegerState{
+- public:
+- 	RangeState(int min, int max);
+--	~RangeState();
+--	virtual STATE_TYPE getStateType();
+-+	~RangeState(){};
+-+	virtual STATE_TYPE getStateType(TIER_TYPE tier_level);
+- 	virtual int setValue(int value);
+- protected:
+- private:
+-@@ -84,17 +115,40 @@
+- 	int max_value;
+- };
+- 
+--//------------------------------------------------------------------------------
+-+RangeState::RangeState(int min, int max) : min_value(min), max_value(max){
+-+}
+-+
+-+STATE_TYPE RangeState::getStateType(TIER_TYPE tier_level){
+-+	return RANGE_STATE;
+-+}
+-+
+-+int RangeState::setValue(int value){
+-+	if(value > max_value  || value < min_value){
+-+		return -1;
+-+	}else{
+-+		state_value = value;
+-+	}
+-+}
+- 
+-+//------------------------------------------------------------------------------
+-+//*
+- class BooleanState : public RangeState{
+- public:
+- 	BooleanState();
+--	~BooleanState();
+--	virtual STATE_TYPE getStateType();
+-+	~BooleanState(){};
+-+	virtual STATE_TYPE getStateType(TIER_TYPE tier_level);
+- protected:
+- private:
+- };
+- 
+-+BooleanState::BooleanState() : RangeState(0,1) {
+-+}
+-+
+-+STATE_TYPE BooleanState::getStateType(TIER_TYPE tier_level){
+-+	return BOOLEAN_STATE;
+-+}
+-+//*/
+- //------------------------------------------------------------------------------
+- 
+-+
+- #endif
+-Binary files ../trek/state.o and /home/kyle/backup/trek/Sep-26-22_19/state.o differ
+-diff -rubB ../trek/top_level_inclusions.h /home/kyle/backup/trek/Sep-26-22_19/top_level_inclusions.h
+---- ../trek/top_level_inclusions.h	2015-10-14 01:33:07.591800242 -0400
+-+++ /home/kyle/backup/trek/Sep-26-22_19/top_level_inclusions.h	2015-09-26 22:19:16.129648096 -0400
+-@@ -7,8 +7,6 @@
++Only in /home/kyle/backup/trek/Sep-09-22_20/: patch.sh
++Only in ../trek: README.txt
++Only in ../trek: state.o
++diff -rubB ../trek/top_level_inclusions.h /home/kyle/backup/trek/Sep-09-22_20/top_level_inclusions.h
++--- ../trek/top_level_inclusions.h	2015-09-26 22:16:45.837641866 -0400
+++++ /home/kyle/backup/trek/Sep-09-22_20/top_level_inclusions.h	2015-09-09 22:20:49.973407168 -0400
++@@ -1,41 +1,9 @@
++-#ifndef STANDARD_INCLUSION_H
++-#define STANDARD_INCLUSION_H
++-
++ #include <stdio.h>
++ #include <stdlib.h>
++ #include <string.h> // bzero
+  #include <string>
+- #include <vector>
++-#include <vector>
+  
+--
+--#define GENERIC_ERROR           (-1)
+  #define STRING_LENGTH           (128)
+  #define RESPONSE_LENGTH         (64)
+  #define SCANF_FORMAT_LENGTH     (16)
+-@@ -20,38 +18,24 @@
+- enum DATA_TYPE{
+- 	TYPE_INVALID = -1,
+- 	TYPE_BOOL = 0,
+--	TYPE_INTEGER = 1,
+--	TYPE_STRING = 2,
+--	TYPE_STATE = 3 // void* in All_type is for this purpose
+-+	TYPE_INT = 1,
+-+	TYPE_STRING = 2
+- };
+- 
+--class All_type{
+--public:
+-+union All_type{
+-+	std::string s;
+-+	int i;
+-+	bool b;	
+-+	DATA_TYPE type;
+-+
+- 	All_type(){
+- 		i = INVALID_INTEGER;
+- 		b = INVALID_BOOL;
+- 		type = TYPE_INVALID;
+- 	}
+- 	
+--	All_type(int value){
+--		type = TYPE_INTEGER;
+--		i = value;
+--	}
++ #define SCANF_SUCCESS           (1)
+ -
+--	All_type(char* str){
+--		type = TYPE_STRING;
+--		s = std::string(str);
+--	}
++-#define INVALID_INTEGER         (-1)
++-#define INVALID_BOOL            (false)
+ -
+- 	~All_type(){
+- 	}
++-enum DATA_TYPE{
++-	TYPE_INVALID = -1,
++-	TYPE_BOOL = 0,
++-	TYPE_INT = 1,
++-	TYPE_STRING = 2
++-};
+ -
++-union All_type{
+ -	std::string s;
+ -	int i;
+ -	bool b;	
+--	void *state;
+ -	DATA_TYPE type;
+--private:
+- };
+- 
+- #endif // STANDARD_INCLUSION_H
++-
++-	All_type(){
++-		i = INVALID_INTEGER;
++-		b = INVALID_BOOL;
++-		type = TYPE_INVALID;
++-	}
++-
++-	~All_type(){
++-	}
++-};
++-
++-#endif // STANDARD_INCLUSION_H
++Only in ../trek: .top_level_inclusions.h.swp
++diff -rubB ../trek/trek.patch /home/kyle/backup/trek/Sep-09-22_20/trek.patch
++--- ../trek/trek.patch	2015-09-26 22:16:47.965641954 -0400
+++++ /home/kyle/backup/trek/Sep-09-22_20/trek.patch	2015-09-09 22:20:49.973407168 -0400
++@@ -1,85 +1,78 @@
++ Diff for the above mentioned files:
++-Only in /home/kyle/backup/trek/Sep-09-22_20/: f
++-Only in ../trek: frame.cpp
++-Only in ../trek: frame.h
++-Only in ../trek: frame.o
++-diff -rubB ../trek/main.cpp /home/kyle/backup/trek/Sep-09-22_20/main.cpp
++---- ../trek/main.cpp	2015-09-26 21:52:54.781582537 -0400
++-+++ /home/kyle/backup/trek/Sep-09-22_20/main.cpp	2015-09-09 22:20:49.973407168 -0400
++-@@ -1,7 +1,6 @@
++- #include <top_level_inclusions.h>
++- #include <application_specific_definitions.h>
++- //#include <state.h>
++--#include <frame.h>
++- 
++- class Rule{
++- public:
++-@@ -27,7 +26,6 @@
++- int begin_consulation(){
++- 	printf("Beginning consulation...\n");
++- 	printf("=================================================\n");
++--	exit(-1); // xxx KA
++- }
++- 
++- // XXX issue: I want to input "no way", but scanf delimits at spaces.
++-Only in ../trek: main.o
++-diff -rubB ../trek/Makefile /home/kyle/backup/trek/Sep-09-22_20/Makefile
++---- ../trek/Makefile	2015-09-26 22:02:07.137605437 -0400
++-+++ /home/kyle/backup/trek/Sep-09-22_20/Makefile	2015-09-09 22:20:49.973407168 -0400
++-@@ -8,7 +8,7 @@
++- 
++- FINAL_EXECUTABLE_NAME=trek
++- 
++--SRCS=main.cpp state.cpp frame.cpp
++-+SRCS=main.cpp state.cpp
++- OBJS=$(subst .cpp,.o,$(SRCS))
++- 
++- all: trek
++-Only in /home/kyle/backup/trek/Sep-09-22_20/: patch.sh
++-Only in ../trek: README.txt
++-Only in ../trek: state.o
++-diff -rubB ../trek/top_level_inclusions.h /home/kyle/backup/trek/Sep-09-22_20/top_level_inclusions.h
++---- ../trek/top_level_inclusions.h	2015-09-26 22:16:45.837641866 -0400
++-+++ /home/kyle/backup/trek/Sep-09-22_20/top_level_inclusions.h	2015-09-09 22:20:49.973407168 -0400
++-@@ -1,41 +1,9 @@
++--#ifndef STANDARD_INCLUSION_H
++--#define STANDARD_INCLUSION_H
++--
++- #include <stdio.h>
++- #include <stdlib.h>
++- #include <string.h> // bzero
++- #include <string>
++--#include <vector>
++- 
++- #define STRING_LENGTH           (128)
++- #define RESPONSE_LENGTH         (64)
++- #define SCANF_FORMAT_LENGTH     (16)
++- #define SCANF_SUCCESS           (1)
++--
++--#define INVALID_INTEGER         (-1)
++--#define INVALID_BOOL            (false)
++--
++--enum DATA_TYPE{
++--	TYPE_INVALID = -1,
++--	TYPE_BOOL = 0,
++--	TYPE_INT = 1,
++--	TYPE_STRING = 2
++--};
++--
++--union All_type{
++--	std::string s;
++--	int i;
++--	bool b;	
++--	DATA_TYPE type;
++--
++--	All_type(){
++--		i = INVALID_INTEGER;
++--		b = INVALID_BOOL;
++--		type = TYPE_INVALID;
++--	}
++--
++--	~All_type(){
++--	}
++--};
++--
++--#endif // STANDARD_INCLUSION_H
+++Only in /home/kyle/backup/trek/Sep-09-22_15/: difference.patch
+++Only in /home/kyle/backup/trek/Sep-09-22_15/: main.o
+++diff -rubB ../trek/Makefile /home/kyle/backup/trek/Sep-09-22_15/Makefile
+++--- ../trek/Makefile	2015-09-09 22:20:20.821405959 -0400
++++++ /home/kyle/backup/trek/Sep-09-22_15/Makefile	2015-09-09 22:15:18.837393440 -0400
+++@@ -26,9 +26,8 @@
+++ BACKUP_DIR="$(shell find ~/backup/trek/ -type d | sort | tail -n 1)"
+++ patch:
+++ 	echo $(BACKUP_DIR)
+++-	@echo "Files that have been changed since last backup:" > $(FINAL_EXECUTABLE_NAME).patch
++++	@echo "Files that have been changed since last backup:" >> $(FINAL_EXECUTABLE_NAME).patch
+++ 	@echo "-----------------------------------------------" >> $(FINAL_EXECUTABLE_NAME).patch
+++-	@-diff -ubB --brief ../$(FINAL_EXECUTABLE_NAME) $(BACKUP_DIR)/ >> $(FINAL_EXECUTABLE_NAME).patch
++++	@-diff -ubB --brief ../$(FINAL_EXECUTABLE_NAME) ~/backup/$(FINAL_EXECUTABLE_NAME)/$(BACKUP_DIR)/ >> $(FINAL_EXECUTABLE_NAME).patch
+++ 	@echo "-----------------------------------------------" >> $(FINAL_EXECUTABLE_NAME).patch
+++-	@echo "Diff for the above mentioned files:" > $(FINAL_EXECUTABLE_NAME).patch
+++-	@-diff -rubB ../$(FINAL_EXECUTABLE_NAME) $(BACKUP_DIR)/ >> $(FINAL_EXECUTABLE_NAME).patch
++++	@-diff -rubB ../$(FINAL_EXECUTABLE_NAME) ~/backup/$(FINAL_EXECUTABLE_NAME)/$(BACKUP_DIR)/ >> $(FINAL_EXECUTABLE_NAME).patch
+++Only in /home/kyle/backup/trek/Sep-09-22_15/: state.o
+++Only in /home/kyle/backup/trek/Sep-09-22_15/: trek
+++diff -rubB ../trek/trek.patch /home/kyle/backup/trek/Sep-09-22_15/trek.patch
+++--- ../trek/trek.patch	2015-09-09 22:20:34.753406537 -0400
++++++ /home/kyle/backup/trek/Sep-09-22_15/trek.patch	2015-09-09 22:15:18.837393440 -0400
+++@@ -1,19 +1,34 @@
+++-Diff for the above mentioned files:
+++-Only in /home/kyle/backup/trek/Sep-09-22_15/: difference.patch
+++-Only in /home/kyle/backup/trek/Sep-09-22_15/: main.o
+++-diff -rubB ../trek/Makefile /home/kyle/backup/trek/Sep-09-22_15/Makefile
+++---- ../trek/Makefile	2015-09-09 22:20:20.821405959 -0400
+++-+++ /home/kyle/backup/trek/Sep-09-22_15/Makefile	2015-09-09 22:15:18.837393440 -0400
+++-@@ -26,9 +26,8 @@
+++- BACKUP_DIR="$(shell find ~/backup/trek/ -type d | sort | tail -n 1)"
+++- patch:
+++- 	echo $(BACKUP_DIR)
+++--	@echo "Files that have been changed since last backup:" > $(FINAL_EXECUTABLE_NAME).patch
+++-+	@echo "Files that have been changed since last backup:" >> $(FINAL_EXECUTABLE_NAME).patch
+++- 	@echo "-----------------------------------------------" >> $(FINAL_EXECUTABLE_NAME).patch
+++--	@-diff -ubB --brief ../$(FINAL_EXECUTABLE_NAME) $(BACKUP_DIR)/ >> $(FINAL_EXECUTABLE_NAME).patch
+++-+	@-diff -ubB --brief ../$(FINAL_EXECUTABLE_NAME) ~/backup/$(FINAL_EXECUTABLE_NAME)/$(BACKUP_DIR)/ >> $(FINAL_EXECUTABLE_NAME).patch
+++- 	@echo "-----------------------------------------------" >> $(FINAL_EXECUTABLE_NAME).patch
+++--	@echo "Diff for the above mentioned files:" > $(FINAL_EXECUTABLE_NAME).patch
+++--	@-diff -rubB ../$(FINAL_EXECUTABLE_NAME) $(BACKUP_DIR)/ >> $(FINAL_EXECUTABLE_NAME).patch
+++-+	@-diff -rubB ../$(FINAL_EXECUTABLE_NAME) ~/backup/$(FINAL_EXECUTABLE_NAME)/$(BACKUP_DIR)/ >> $(FINAL_EXECUTABLE_NAME).patch
++++
++++Files that have been changed since last backup:
++++-----------------------------------------------
++++-----------------------------------------------
++++Files that have been changed since last backup:
++++-----------------------------------------------
++++-----------------------------------------------
++++Files that have been changed since last backup:
++++-----------------------------------------------
++++-----------------------------------------------
++++Files that have been changed since last backup:
++++-----------------------------------------------
++++-----------------------------------------------
++++Files that have been changed since last backup:
++++-----------------------------------------------
++++-----------------------------------------------
++++Files that have been changed since last backup:
++++-----------------------------------------------
++++-----------------------------------------------
++++Files that have been changed since last backup:
++++-----------------------------------------------
++++-----------------------------------------------
++++Files that have been changed since last backup:
++++-----------------------------------------------
++++-----------------------------------------------
++++Files that have been changed since last backup:
++++-----------------------------------------------
++++-----------------------------------------------
++++Files that have been changed since last backup:
++++-----------------------------------------------
++++-----------------------------------------------
++++Files that have been changed since last backup:
++++-----------------------------------------------
++++-----------------------------------------------
+Only in ../trek: working_memory.cpp
+Only in ../trek: working_memory.h
+Only in ../trek: working_memory.o
