@@ -1,20 +1,20 @@
 
 # Makefile to build TREK, the packing list expert system
 
-CC=gcc
-CXX=g++
+CC=gcc#arm-linux-gnueabi-gcc#gcc
+CXX=g++#arm-linux-gnueabihf-g++-4.6#arm-linux-gnueabi-g++#g++
 RM=rm -f
-CPPFLAGS=-I. -std=gnu++0x #-Wall -Weffc++
+CPPFLAGS=-I. -std=c++0x #-std=gnu++0x #-Wall -Weffc++
 
 FINAL_EXECUTABLE_NAME=trek
 
-SRCS=main.cpp state.cpp frame.cpp working_memory.cpp knowledge_base.cpp application_specific_definitions.cpp 
+SRCS=main.cpp state.cpp frame.cpp working_memory.cpp knowledge_base.cpp inference_engine.cpp user_input.cpp application_specific_definitions.cpp 
 OBJS=$(subst .cpp,.o,$(SRCS))
 
 all: trek
 
 trek: $(OBJS) patch
-	$(CXX) $(CPPFLAGS) $(LDFLAGS) -o $(FINAL_EXECUTABLE_NAME) $(OBJS) $(LDLIBS) 
+	$(CXX) $(CPPFLAGS) -o $(FINAL_EXECUTABLE_NAME) $(OBJS) $(LDLIBS) 
 
 clean: dist-clean
 	$(RM) $(OBJS)

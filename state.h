@@ -4,26 +4,6 @@
 #include <top_level_inclusions.h>
 #include <tuple>
 
-/*
-class CLASSNAME{
-public:
-	CLASSNAME();
-	~CLASSNAME(){};
-	int method1(char *input1);
-	int method2(char *input2);
-protected:
-private:
-	std::string field1;
-};
-
-CLASSNAME::CLASSNAME(){
-}
-
-int CLASSNAME::method1(char *input1){
-	field1 = std::string(input1);
-}
-*/
-
 enum STATE_TYPE
 {
 	INVALID_STATE = 0,
@@ -45,10 +25,12 @@ enum TIER_TYPE
 class State{
 public:
 	State();
+	State(const char* unique_identifier);
 	~State();
         virtual STATE_TYPE getStateType()=0;
 protected:
 private:
+	std::string state_unique_identifier;
 	STATE_TYPE state_type;
 	All_type state_value; // only has a value if STATE_TYPE != MULTI_STATE
 	std::vector<State*> sub_states; // only used if STATE_TYPE == MULTI_STATE
@@ -58,13 +40,11 @@ private:
 
 class IntegerState : public State{
 public:
-	IntegerState();
+	IntegerState(const char* unique_identifier);
 	~IntegerState();
 	virtual STATE_TYPE getStateType();
 	virtual int getValue(){return state_value;}
-	virtual int setValue()=0;//xxx KA it would make sense to make this non-v
-				//irtual, but we want range to limit it now and
-				// we want IntegerState to be abstract
+	virtual int setValue(){};
 protected:
 	int state_value;
 private:
@@ -74,7 +54,7 @@ private:
 
 class RangeState : public IntegerState{
 public:
-	RangeState(int min, int max);
+	RangeState(const char* unique_identifier, int min, int max);
 	~RangeState();
 	virtual STATE_TYPE getStateType();
 	virtual int setValue(int value);
@@ -88,7 +68,7 @@ private:
 
 class BooleanState : public RangeState{
 public:
-	BooleanState();
+	BooleanState(const char* unique_identifier);
 	~BooleanState();
 	virtual STATE_TYPE getStateType();
 protected:

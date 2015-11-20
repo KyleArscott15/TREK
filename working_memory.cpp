@@ -10,15 +10,23 @@ PackingList::PackingList(){
 PackingList::~PackingList(){
 }
 
-WorkingMemory::WorkingMemory(){
-	//wmAccess(WM_ADD, WM_STATE, );
+static StateTable initializeInitialStateTable(){
+	StateTable st;
+	st[SESSION_DURATION] = new IntegerState(SESSION_DURATION);
+	return st;	
+}
+static StateTable initial_state_table = initializeInitialStateTable();
 
+WorkingMemory::WorkingMemory(){
+	// add in sessional information to initialize the working memory
+	wmAccess(WM_ADD, WM_STATE, (void*)initial_state_table[SESSION_DURATION], NULL);
 };
 WorkingMemory::~WorkingMemory(){
 };
 WORKING_MEMORY_ERROR WorkingMemory::wmAccess(WORKING_MEMORY_ACTION action, WORKING_MEMORY_SECTION section, void* input, void* output){
 	if(action == WM_ADD){
 		printf("about to add to WM in section [%d]\n", section);
+//		State *state = new State();
 	}
 	return WM_SUCCESS;
 }

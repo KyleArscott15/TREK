@@ -6,9 +6,11 @@
 #include <string.h> // bzero
 #include <string>
 #include <vector>
+#include <map>
+#include <boost/function.hpp>
 
-
-#define GENERIC_ERROR           (-1)
+#define GENERIC_SUCCESS         (0)  // functions return this value if an action happened and/or it was successful
+#define GENERIC_ERROR           (-1) // functions return this value if an action did NOT happen and/or the action was unsuccessful
 #define STRING_LENGTH           (128)
 #define RESPONSE_LENGTH         (64)
 #define SCANF_FORMAT_LENGTH     (16)
@@ -16,6 +18,13 @@
 
 #define INVALID_INTEGER         (-1)
 #define INVALID_BOOL            (false)
+
+#define HLINE(){ \
+	 printf("==================================================\n"); \
+}
+
+typedef boost::function<int(void)> builtin_func_t;
+typedef std::map<std::string,builtin_func_t> builtin_t;
 
 enum DATA_TYPE{
 	TYPE_INVALID = -1,

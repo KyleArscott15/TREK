@@ -3,7 +3,6 @@
 
 #include <state.h>
 #include <frame.h>
-#include <map>
 
 enum WORKING_MEMORY_SECTION{
 	WM_STATE = 1,
@@ -32,8 +31,6 @@ private:
 	std::string raw_response;
 	int prompt_response_id; // from [1, n] where n is number of user prompts
 	std::string date_prompted; // output of `date`, used to timestamp user response for evidence in court
-	All_type sanitized_response;
-	static All_type sanitizeInput(std::string raw_response);
 };
 
 class PackingList{
@@ -67,6 +64,10 @@ private:
 	std::map<std::string, Frame> packing_list; //string key is the frame_name of the frame it stores, used a map for fast "existence" queries
 };
 
+// WM specific types	
+#define SESSION_DURATION "sess_dur"
+typedef std::map<const char*, State*> StateTable;
+typedef std::vector<PromptHistory*> HistoryList;
 class WorkingMemory{
 public:
 	WorkingMemory();
@@ -76,10 +77,11 @@ public:
 	 // good for using in an antedendant statement, then use dot operator to get value that you want
 	All_type wmAccess(WORKING_MEMORY_ACTION action, WORKING_MEMORY_SECTION section, void *input);
 private:
+
 	// these are the 3 main sections of the working memory
-	std::vector<State*> state_vector;
-	std::vector<PromptHistory*> prompt_history_vector;
-	PackingList packing_list;	
+	StateTable wm_state_table;
+	HistoryList wm_prompt_history;
+	PackingList wm_packing_list;	
 
 	All_type getStateValue(void* input);
 };

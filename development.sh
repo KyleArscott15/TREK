@@ -4,7 +4,7 @@ set -e
 
 clear
 
-make clean
+#make clean
 make
 echo "compilation complete----------------------------------"
 
