@@ -1,1 +1,1 @@
-development.sh
+build.sh

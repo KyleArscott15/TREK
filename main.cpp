@@ -5,6 +5,7 @@
 #include <knowledge_base.h>
 #include <inference_engine.h>
 #include <user_input.h>
+
 int begin_consultation(){
 	printf("Beginning consultation...\n");
 	HLINE();
@@ -14,20 +15,39 @@ int end_consultation(){
 	HLINE();
 	exit(-1);
 }
-static builtin_t initialize_built_in(){	
+extern builtin_t builtins; // extern is used in C++ for forward declaration. Not needed in C.
+int usage(){
+	printf("\n");
+	printf("Run with no arguments.\n");
+	printf("Built-in commands can be used at any time:\n");
+	for(std::map<std::string,builtin_func_t>::iterator it=builtins.begin(); it!=builtins.end(); ++it){
+		printf("%s\n", it->first.c_str());
+	}
+	printf("\n");
+}
+//int help();
+builtin_t initialize_built_in(){	
 	builtin_t builtins;
 	std::string doc("doc");
 	std::string end("exit");
-	boost::function<int(void)> f = documentation;
-	boost::function<int(void)> f2 = end_consultation;	
+	std::string help("help");
+	builtin_func_t f = documentation;
+	builtin_func_t f2 = end_consultation;	
+	builtin_func_t f3 = usage;
 	builtins[doc] = f;
 	builtins[end] = f2;
+	builtins[help] = f3;
 	return builtins;
 }
-static builtin_t builtins = initialize_built_in();
+builtin_t builtins = initialize_built_in();
+
+int help(){
+	usage();
+	return GENERIC_SUCCESS;
+}
 int recognize_built_in(std::string response){
 	int ret = GENERIC_ERROR;
-	for(std::map<std::string,boost::function<int(void)>>::iterator it=builtins.begin(); it!=builtins.end(); ++it){
+	for(std::map<std::string,builtin_func_t>::iterator it=builtins.begin(); it!=builtins.end(); ++it){
 		if(response.compare(it->first) == 0){
 			ret = it->second();
 			goto done_builtin;
