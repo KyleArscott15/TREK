@@ -1,74 +1,132 @@
 #ifndef KNOWLEDGE_H
 #define KNOWLEDGE_H
 
-#include <top_level_inclusions.h>
-#include <working_memory.h>
-#include <frame.h>
 #include <vector>
-//#include <singleton.h>
-// NO. #include <application_specific_definitions.h>
+
+#include "top_level_inclusions.h"
+#include "working_memory.h"
+#include "frame.h"
+
+#define RULE_IF(rule_name, condition)     \
+  bool rule_name::evaluateAntecendant() { \
+    return ((condition));                 \
+  }
+
+#define RULE_AC(rule_name, action)   \
+  bool rule_name::evaluateAction() { \
+    ((action));                      \
+    return true;                     \
+  }
+
+typedef enum Rule_Property {
+  ONE_SHOT = 0,
+  PRIORITY = 1
+} RuleProperty;
+#define RULE_PROPERTY(rule_name, property, value) \
+  int rule_name::setProperties() {                \
+    properties[((property))] = ((value));         \
+    return SUCCESS;                               \
+  }
+
+#define RULE_DEFINE(rule_name, format, prompt, response_type) \
+  class rule_name : public Rule {                             \
+public:                                                       \
+      rule_name() {                                           \
+      responseType = response_type;                           \
+      setFormat(format);                                      \
+      setPrompt(prompt);                                      \
+    }                                                         \
+    bool evaluateAntecendant();                               \
+    bool evaluateAction();                                    \
+protected:                                                    \
+private:                                                      \
+  }
+
+#define RULE_DEFINE_PROP(rule_name, format, prompt, response_type) \
+  class rule_name : public Rule {                                  \
+public:                                                            \
+    rule_name() {                                                  \
+      responseType = response_type;                                \
+      setFormat(format);                                           \
+      setPrompt(prompt);                                           \
+    }                                                              \
+    bool evaluateAntecendant();                                    \
+    bool evaluateAction();                                         \
+    int setProperties();                                           \
+protected:                                                         \
+private:                                                           \
+  }
+
+#define RULE (rule_name, format, prompt, response_type, condition, action) { \
+    RULE_DEFINE_PROP(rule_name, format, prompt, response_type);              \
+    RULE_PROPERTY(rule_name, ONE_SHOT, true);                                \
+    RULE_IF(rule_name, condition);                                           \
+    RULE_AC(rule_name, action);                                              \
+}
 
 class Rule;
 
-class KnowledgeBase{// xxx TODO :public Singleton{
+class KnowledgeBase { // xxx TODO :public Singleton{
 public:
-	KnowledgeBase();
-	~KnowledgeBase();
-	static std::map<std::string, Frame> frames;
-	static Frame boots;
-	static Frame initializeBoots();	
-	std::vector<Rule> contendingRules();
-protected:
-private:
-	static std::map<std::string, Frame> initializeFrames();
-	int initializeRules();
 
-	std::vector<Rule*> rules;
+  KnowledgeBase();
+  ~KnowledgeBase();
+  static map<string, Frame> frames;
+  vector<Rule>contendingRules();
+
+protected:
+
+private:
+
+  static map<string, Frame>initializeFrames();
+  int                      initializeRules();
+
+  vector<Rule *> rules;
 };
 
-class Rule:public WorkingMemory{
+class Rule : public WorkingMemory {
 public:
-	Rule();
-	~Rule();
-	virtual bool evaluateAntecendant(){return false;}; //TODO make pure virtual?
-	virtual bool evaluateAction(){return false;}; //TODO make pure virtual?
-	int setPrompt(char *input_prompt);
-	int setFormat(char *input_format);
-	std::string prompt;
-	std::string format;
+
+  Rule();
+  ~Rule();
+  virtual bool evaluateAntecendant() {
+    return false;
+  }
+
+  virtual bool evaluateAction() {
+    return false;
+  }
+
+  virtual int setProperties() {
+    return ERROR;
+  }
+
+  int setPrompt(char *input_prompt);
+  int setPrompt(string input_prompt);
+  int setFormat(char *input_format);
+  int setFormat(string input_format);
+  string prompt;
+  string format;
+  TYPE   responseType;
+
+  // int is either
+  // a) bool (0 false, 1 true)
+  // b) the integer literal
+  // c) an index to a string
+  map<RuleProperty, int> properties;
+
 protected:
+
 private:
 };
 
-//------------------------------------------------------------------------------
-// Frame references
-
-#define BOOTS       "boots"
-#define AQUATABS    "aqua tabs"
-
-//------------------------------------------------------------------------------
-// Ways to access WM 
-
-//------------------------------------------------------------------------------
-//Ways to access WM
-
+// Ways to access WM
 #define F(item) (&KnowledgeBase::frames[item])
 
 // states
-#define HIKING_DISTANCE      "hdist" // used internally to differentiate states, does not matter to user
+#define NUM_NIGHTS             "kayaktrue"
+#define HIKING_DISTANCE_M      "hdist" // used internally to differentiate
+                                       // states,
+                                       // does not matter to user
 
-//------------------------------------------------------------------------------
-
-#define RULE_DEFINE(rule_name)\
-	class rule_name:public Rule{\
-		bool evaluateAntecendant();\
-		bool evaluateAction();\
-	}
-
-// XXX KA for quick development, rules are implemted as c++ objects
-RULE_DEFINE(HikeDistanceRule);
-RULE_DEFINE(HikeDistanceWaterRule);
-
-
-
-#endif 
+#endif // ifndef KNOWLEDGE_H

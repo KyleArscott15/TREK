@@ -1,89 +1,111 @@
 #ifndef WORKING_MEMORY_H
 #define WORKING_MEMORY_H
 
-#include <state.h>
-#include <frame.h>
+#include "state.h"
+#include "frame.h"
 
-enum WORKING_MEMORY_SECTION{
-	WM_STATE = 1,
-	WM_PROMPT_HISTORY = 2,
-	WM_PACKING_LIST = 3
+enum WORKING_MEMORY_SECTION {
+  WM_STATE          = 1,
+  WM_PROMPT_HISTORY = 2,
+  WM_PACKING_LIST   = 3
 };
-enum WORKING_MEMORY_ACTION{
-	WM_EXISTS = 1,
-	WM_ADD = 2,
-	WM_REMOVE = 3,
-	WM_GET = 4,
-	WM_SET = 5
+enum WORKING_MEMORY_ACTION {
+  WM_EXISTS = 1, // can use at any time
+  WM_ADD    = 2, // need to add before you can remove, get or set. Adds
+                 // the state or item to the working memory
+  WM_REMOVE = 3, // can remove only if its added
+  WM_GET    = 4, // can get only if its added
+  WM_SET    = 5  // can set only if its added
 };
-enum WORKING_MEMORY_ERROR{
-	WM_ALREADY_EXISTS = 1, // tried to WM_ADD, but it already exists, not an error
-	WM_SUCCESS = 0,
-	WM_MISMATCH = -1, // combo of WMS and WMA is not meaningful
-	WM_DNE = -2, // tried to remove or get, but that item does not exist in WM 
-	WM_FAIL_ACTION = -3// generic error
-};
-class PromptHistory{
+
+class PromptHistory {
 public:
-	PromptHistory();
-	~PromptHistory();
-private:
-	std::string raw_response;
-	int prompt_response_id; // from [1, n] where n is number of user prompts
-	std::string date_prompted; // output of `date`, used to timestamp user response for evidence in court
-};
 
-class PackingList{
-public:
-	 PackingList();
-	~PackingList();
-	WORKING_MEMORY_ERROR addFrame(Frame frame){
-		
-		std::string frame_name = frame.getName();
-		if(packing_list.count(frame_name) > 0){
-			return WM_ALREADY_EXISTS; 
-		}
+  PromptHistory();
+  ~PromptHistory();
 
-		packing_list[frame_name] = frame;
-		return WM_SUCCESS;
-	};
-
-	WORKING_MEMORY_ERROR removeFrame(Frame frame){
-		std::string frame_name = frame.getName();
-		if(packing_list.count(frame_name) == 0){
-			return WM_DNE;
-		}
-		int num_removed = packing_list.erase(frame_name);
-		if(num_removed){
-			return WM_SUCCESS;
-		}else{
-			return WM_FAIL_ACTION;
-		}
-	};
-private:
-	std::map<std::string, Frame> packing_list; //string key is the frame_name of the frame it stores, used a map for fast "existence" queries
-};
-
-// WM specific types	
-#define SESSION_DURATION "sess_dur"
-typedef std::map<const char*, State*> StateTable;
-typedef std::vector<PromptHistory*> HistoryList;
-class WorkingMemory{
-public:
-	WorkingMemory();
-	~WorkingMemory();
-	int getHikingDistance(){return 6;};
-	WORKING_MEMORY_ERROR wmAccess(WORKING_MEMORY_ACTION action, WORKING_MEMORY_SECTION section, void *input, void *output);
-	 // good for using in an antedendant statement, then use dot operator to get value that you want
-	All_type wmAccess(WORKING_MEMORY_ACTION action, WORKING_MEMORY_SECTION section, void *input);
 private:
 
-	// these are the 3 main sections of the working memory
-	StateTable wm_state_table;
-	HistoryList wm_prompt_history;
-	PackingList wm_packing_list;	
-
-	All_type getStateValue(void* input);
+  string raw_response;
+  int    prompt_response_id; // from [1, n] where n is number of user prompts
+  string date_prompted;      // output of `date`, used to timestamp user
+  // response for evidence in court
 };
 
-#endif
+class PackingList {
+public:
+
+  PackingList();
+  ~PackingList();
+  int addFrame(Frame frame) {
+    string frame_name = frame.getName();
+
+    if (packing_list.count(frame_name) > 0) {
+      return ALREADY_EXISTS;
+    }
+
+    packing_list[frame_name] = frame;
+    return SUCCESS;
+  }
+
+  int removeFrame(Frame frame) {
+    string frame_name = frame.getName();
+
+    if (packing_list.count(frame_name) == 0) {
+      return NO_MATCH;
+    }
+    int num_removed = packing_list.erase(frame_name);
+
+    if (num_removed) {
+      return SUCCESS;
+    } else {
+      return FAILED_ACTION;
+    }
+  }
+
+private:
+
+  map<string, Frame> packing_list; // string key is the frame_name of
+  // the frame it stores, used a map
+  // for fast "existence" queries
+};
+
+// WM specific types
+typedef map<string, All_type>StateTable; // XXX KA don't make it a pointer,
+                                         // just a normal. Just plain values
+                                         // in working memory. Version 1 has
+                                         // All_type, version 2 has State object
+typedef vector<PromptHistory *>HistoryList;
+
+class WorkingMemory {
+public:
+
+  WorkingMemory();
+  ~WorkingMemory();
+
+  int getHikingDistance() {
+    return 6;
+  }
+
+  int wmStateAccess(
+    WORKING_MEMORY_ACTION action,
+    string                state,
+    All_type              optional_value);
+
+  // good for using in an antecendant statement, then use dot operator to get
+  // value that you want
+  All_type wmAccess(WORKING_MEMORY_ACTION  action,
+                    WORKING_MEMORY_SECTION section,
+                    void                  *input);
+
+private:
+
+  // these are the 3 main sections of the working memory
+  StateTable  stateTable;
+  HistoryList promptHistory;
+  PackingList packingList;
+
+  All_type getStateValue(void *input);
+};
+
+#endif // ifndef WORKING_MEMORY_H
