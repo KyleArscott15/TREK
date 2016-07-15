@@ -92,20 +92,18 @@ public:
     string                state,
     All_type              optional_value);
 
-  // good for using in an antecendant statement, then use dot operator to get
-  // value that you want
-  All_type wmAccess(WORKING_MEMORY_ACTION  action,
-                    WORKING_MEMORY_SECTION section,
-                    void                  *input);
-
+  int wmListAccess(
+    WORKING_MEMORY_ACTION action,
+    string                state,
+    All_type              optional_value) {
 private:
 
-  // these are the 3 main sections of the working memory
-  StateTable  stateTable;
-  HistoryList promptHistory;
-  PackingList packingList;
+    // these are the 3 main sections of the working memory
+    StateTable  stateTable;
+    HistoryList promptHistory;
+    PackingList packingList;
 
-  All_type getStateValue(void *input);
-};
+    All_type getStateValue(void *input);
+  }
 
 #endif // ifndef WORKING_MEMORY_H

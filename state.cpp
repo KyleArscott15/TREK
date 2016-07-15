@@ -169,6 +169,9 @@ State::~State() {}
 //
 //
 //
+//
+//
+//
 // ------------------------------------------------------------------------------
 
 IntegerState::IntegerState(const char *unique_identifier) : State(
@@ -181,6 +184,9 @@ STATE_TYPE IntegerState::getStateType() {
   return INTEGER_STATE;
 }
 
+//
+//
+//
 //
 //
 //
@@ -524,6 +530,9 @@ int RangeState::setValue(int value) {
 //
 //
 //
+//
+//
+//
 // ------------------------------------------------------------------------------
 
 BooleanState::BooleanState(const char *unique_identifier) : RangeState(
@@ -536,6 +545,9 @@ STATE_TYPE BooleanState::getStateType() {
   return BOOLEAN_STATE;
 }
 
+//
+//
+//
 //
 //
 //

@@ -63,30 +63,42 @@ int WorkingMemory::wmStateAccess(
   return SUCCESS;
 }
 
-/*
-   WORKING_MEMORY_ERROR WorkingMemory::wmAccess(WORKING_MEMORY_ACTION  action,
-                                             WORKING_MEMORY_SECTION section,
-                                             void                  *input,
-                                             void                  *output) {
-   if (action == WM_ADD) {
-    printf("about to add to WM in section [%d]\n", section);
+int WorkingMemory::wmListAccess(
+  WORKING_MEMORY_ACTION action,
+  string                state,
+  All_type              optional_value) {
+  switch (action) {
+  case (WM_EXISTS): {
+    break;
+  };
 
-    //		State *state = new State();
-   }
-   return WM_SUCCESS;
-   }*/
-All_type WorkingMemory::wmAccess(WORKING_MEMORY_ACTION  action,
-                                 WORKING_MEMORY_SECTION section,
-                                 void                  *input) {
-  All_type ret_val;
-
-  if (action == WM_GET) {
-    if (section == WM_STATE) {
-      ret_val = getStateValue(input);
+  case (WM_ADD): {
+    if (wmStateAccess(WM_EXISTS, state, optional_value)) {
+      return ALREADY_EXISTS;
     }
+
+    stateTable[state] = optional_value;
+    break;
+  };
+
+  case (WM_REMOVE): {
+    break;
+  };
+
+  case (WM_GET): {
+    break;
+  };
+
+  case (WM_SET): {
+    break;
+  };
+
+  default: {
+    printf("Default for %s\n", __FUNCTION__);
+  };
   }
 
-  return ret_val;
+  return SUCCESS;
 }
 
 All_type WorkingMemory::getStateValue(void *input) {
