@@ -21,8 +21,9 @@ enum WORKING_MEMORY_ACTION {
 class PromptHistory {
 public:
 
-  PromptHistory();
-  ~PromptHistory();
+  PromptHistory() {}
+
+  ~PromptHistory() {}
 
 private:
 
@@ -35,8 +36,10 @@ private:
 class PackingList {
 public:
 
-  PackingList();
-  ~PackingList();
+  PackingList() {}
+
+  ~PackingList() {}
+
   int addFrame(Frame frame) {
     string frame_name = frame.getName();
 
@@ -83,6 +86,8 @@ public:
   WorkingMemory();
   ~WorkingMemory();
 
+  int printMemoryDump();
+
   int getHikingDistance() {
     return 6;
   }
@@ -95,15 +100,16 @@ public:
   int wmListAccess(
     WORKING_MEMORY_ACTION action,
     string                state,
-    All_type              optional_value) {
+    All_type              optional_value);
+
 private:
 
-    // these are the 3 main sections of the working memory
-    StateTable  stateTable;
-    HistoryList promptHistory;
-    PackingList packingList;
+  // these are the 3 main sections of the working memory
+  StateTable  stateTable;
+  HistoryList promptHistory;
+  PackingList packingList;
 
-    All_type getStateValue(void *input);
-  }
+  All_type getStateValue(void *input);
+};
 
 #endif // ifndef WORKING_MEMORY_H

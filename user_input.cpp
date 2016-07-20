@@ -1,4 +1,5 @@
 #include "user_input.h"
+#include <stdexcept>
 
 int UserInput::issuePrompt(string prompt, string format, string& response) {
   // issue the prompt to the console
@@ -19,14 +20,39 @@ string UserInput::sanitizeInput(string raw_response) {
   return sanitized_response;
 }
 
-int parseResposeForRule(Rule  *rule,
-                        string response) {
+All_type UserInput::parseResposeForRule(Rule  *rule,
+                                        string response) {
   // response can be:
   // a) binary, yes or no
   // b) m choose n, ex. 4 activities choose 2, or pick one of the following
   // c) input n numbers, ex. list your 5 favourite numbers
   // d) an All_type or enum DATA_TYPE
 
-  return SUCCESS;
+  All_type at;
+  int BASE_10 = 10;
+
+  at.type = rule->getResponseType();
+
+  if (at.type == TYPE_BOOL) {
+    // make sure it a {1,Y,true} or {0,N,false}
+  } else if (at.type == TYPE_STRING) {
+    // put as is into wm
+    at.type = TYPE_INVALID;
+  } else if (at.type == TYPE_INTEGER) {
+    try {
+      int i = stoi(response, nullptr, BASE_10);
+      at.i = i;
+    } catch (const std::invalid_argument& ia) {
+      // cerr << "Invalid argument: " << ia.what() << endl;
+      at.type = TYPE_INVALID;
+    } catch (const std::out_of_range& oor) {
+      // cerr << "Out of Range error: " << oor.what() << '\n';
+      at.type = TYPE_INVALID;
+    }
+  } else {
+    at.type = TYPE_INVALID;
+  }
+
+  return at;
 }
 

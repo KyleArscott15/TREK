@@ -36,6 +36,11 @@ int Shell::help() {
   return SUCCESS;
 }
 
+int Shell::wmContents() {
+  wm->printMemoryDump();
+  return SUCCESS;
+}
+
 int Shell::recognizeBuiltIn(string response) {
   int ret = SUCCESS;
 
@@ -45,6 +50,8 @@ int Shell::recognizeBuiltIn(string response) {
     endConsultation();
   } else if (response.compare(HELP) == 0)  {
     help();
+  } else if (response.compare(WM_CONTENTS) == 0)  {
+    wmContents();
   } else {
     ret = NO_MATCH;
   }
@@ -57,9 +64,10 @@ void Shell::run() {
   listSpecialCommands();
   beginConsultation();
 
-  Rule  *rule;
-  string response;
-  int    prompt_success;
+  Rule *rule;
+  string   response;
+  int      prompt_success;
+  All_type cleanResponse;
 
   for (;;) {
     // clear shell variables
@@ -83,7 +91,15 @@ void Shell::run() {
     }
 
     // no special commands, parse user input
-    if (ui->parseResposeForRule(rule, response) < SUCCESS) {}
+    cleanResponse = ui->parseResposeForRule(rule, response);
+
+    if (cleanResponse.getType() == TYPE_INVALID) {
+      printf("Please format your input and try again...\n\n");
+      goto end_of_loop;
+    }
+
+    // attempt to add the new information to the working memory
+    rule->setPromptResponseToWM(cleanResponse);
 
     continue;
 

@@ -131,11 +131,45 @@ vector<Rule>KnowledgeBase::contendingRules()
 
 // Hiking Rules (below)
 
-INPUT_RULE(HikeDistanceRule, wmStateAccess(WM_GET,
+/*
+   INPUT_RULE(HikeDistanceRule, wmStateAccess(WM_GET,
                                            HIKING_TRUE,
                                            NULL) == true,
            "How far will you hike, in meters?\n", TYPE_INTEGER,
            HIKE_DISTANCE_M);
+ */
+
+class HikeDistanceRule : public Rule {
+public:
+
+  HikeDistanceRule() {
+    responseType = TYPE_INTEGER;
+    setFormat("%s\n");
+    setPrompt("How far will you hike, in meters?\n");
+  }
+
+  ~HikeDistanceRule() {}
+
+  bool evaluateAntecendant() {
+    return true;
+  }
+
+  bool evaluateAction() {
+    return false;
+  }
+
+  int setProperties() {
+    return -1;
+  }
+
+  int setPromptResponseToWM(All_type at) {
+    return wmStateAccess(WM_ADD, HIKE_DISTANCE_M, at);
+  }
+
+protected:
+
+private:
+};
 
 /*
    OUTPUT_RULE(BootsRule, wmStateAccess(WM_GET, HIKING_DISTANCE_M, NULL).i >
@@ -153,7 +187,9 @@ INPUT_RULE(HikeDistanceRule, wmStateAccess(WM_GET,
    INPUT_RULE(HikeTrueRule, true, "Are you hiking?\n", TYPE_BOOL, HIKING_TRUE);
 
    OUTPUT_RULE(BasicHikingListRule, wmStateAccess(WM_GET, HIKING_TRUE, NULL) ==
- ||||true, wmListAccess(WM_ADD, F(BASIC_HIKING_LIST), NULL));
+ ||||||||||||||||||||||||||||||||true, wmListAccess(WM_ADD,
+ |||||||||||||||||||||||||||||||F(BASIC_HIKING_LIST),
+ |||||||||||||||||||||||||||||||NULL));
 
    OUTPUT_RULE(ShortsRule, wmStateAccess(WM_GET,
                    MAX_DAILY_TEMPERATURE_C).i >
@@ -169,7 +205,7 @@ INPUT_RULE(HikeDistanceRule, wmStateAccess(WM_GET,
      WINTER);
 
    OUTPUT_RULE(WinterBootsRule, wmStateAccess(WM_GET, WINTER, NULL) == true,
- ||||wmListAccess(WM_ADD, f(WINTER_BOOTS), NULL));
+ ||||||||||||||||||||||||||||||||wmListAccess(WM_ADD, f(WINTER_BOOTS), NULL));
 
    INPUT_RULE(TickRule,
      wmStateAccess(WM_GET, HIKING_TRUE, NULL) == true,
@@ -178,11 +214,19 @@ INPUT_RULE(HikeDistanceRule, wmStateAccess(WM_GET,
      TICKS);
 
    OUTPUT_RULE(TickNoticeRule, wmStateAccess(WM_GET, TICKS, NULL) == true,
- ||||wmListAccess(WM_ADD, N("Be careful of ticks in the area. Wear pants at all
- ||||times."), NULL));
+ ||||||||||||||||||||||||||||||||wmListAccess(WM_ADD, N("Be careful of ticks in
+ |||||||||||||||||||||||||||||||the
+ |||||||||||||||||||||||||||||||area.
+ |||||||||||||||||||||||||||||||Wear
+ |||||||||||||||||||||||||||||||pants
+ |||||||||||||||||||||||||||||||at
+ |||||||||||||||||||||||||||||||all
+ ||||||||||||||||||||||||||||||||times."), NULL));
 
    OUTPUT_RULE(AnimalRule, wmStateAccess(WM_GET, SOUTHERN_ONTARIO) == true,
- ||||wmListAccess(WM_ADD, N(SOUTHER_ONTARIO_ANIMALS_WARNING), true));
+ ||||||||||||||||||||||||||||||||wmListAccess(WM_ADD,
+ |||||||||||||||||||||||||||||||N(SOUTHER_ONTARIO_ANIMALS_WARNING),
+ |||||||||||||||||||||||||||||||true));
 
    // Camping Rules (below)
 
@@ -197,9 +241,9 @@ INPUT_RULE(HikeDistanceRule, wmStateAccess(WM_GET,
      CAR_CAMPING
 
    OUTPUT_RULE(BedComfortRule, wmStateAccess(WM_GET, CAR_CAMPING, NULL) == true,
- ||||)
+ ||||||||||||||||||||||||||||||||)
      wmListAccess(WM_ADD, GROUND_COVER, "You can add this non-essential item
- ||||because you can afford the space."),
+ ||||||||||||||||||||||||||||||||because you can afford the space."),
      wmListAccess(WM_ADD, AIR_MATTRESS, AIR_MATTRESS_REPAIR_KIT));
 
    OUTPUT_RULE(NotCarCampingRule,
@@ -271,24 +315,14 @@ INPUT_RULE(HikeDistanceRule, wmStateAccess(WM_GET,
      wmListAccess(WM_ADD, FISH_FINDER, TROLLING_MOTOR));
  */
 
-/*
-   int KnowledgeBase::initializeRules()
-   {
-   rules.push_back(new KayakTrueRule());
-   rules.push_back(new HikeDistanceRule());
-   rules.push_back(new AquaTabsRule());
-   rules.push_back(new HikeDistanceRule());
-   rules.push_back(new HikeDistanceRule());
-   rules.push_back(new HikeDistanceRule());
-   rules.push_back(new HikeDistanceRule());
-   rules.push_back(new HikeDistanceRule());
-   rules.push_back(new HikeDistanceRule());
-   rules.push_back(new HikeDistanceRule());
-   rules.push_back(new HikeDistanceRule());
-   rules.push_back(new HikeDistanceRule());
-   rules.push_back(new HikeDistanceRule());
-   rules.push_back(new HikeDistanceRule());
-   return ERROR;
-   }
- */
+// /*
+int KnowledgeBase::initializeRules()
+{
+  rules.push_back(new HikeDistanceRule());
+
+  // rules.push_back(new AquaTabsRule());
+  return ERROR;
+}
+
+// */
 

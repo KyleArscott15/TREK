@@ -37,6 +37,13 @@ public:
 
   ~All_type() {}
 
+  friend ostream& operator<<(ostream       & os,
+                             const All_type& at);
+
+  TYPE            getType() {
+    return type;
+  }
+
   TYPE   type;
   string s;
   int    i;
@@ -45,5 +52,18 @@ public:
 
 private:
 };
+
+inline ostream& operator<<(ostream& out, const All_type& at) {
+  if (at.type == TYPE_BOOL) {
+    out << at.b;
+  } else if (at.type == TYPE_STRING) {
+    out << at.s;
+  } else if (at.type == TYPE_INTEGER) {
+    out << at.i;
+  } else {
+    out << "null";
+  }
+  return out;
+}
 
 #endif // ifndef TYPES_H

@@ -10,7 +10,7 @@ FINAL_EXECUTABLE_NAME=trek
 
 SRCS=main.cpp state.cpp frame.cpp working_memory.cpp \
      knowledge_base.cpp inference_engine.cpp user_input.cpp \
-     application_specific_definitions.cpp shell.cpp
+     application_specific_definitions.cpp shell.cpp types.cpp
 OBJS=$(subst .cpp,.o,$(SRCS))
 
 all: trek

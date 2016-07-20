@@ -11,11 +11,11 @@ public:
 
   ~UserInput() {}
 
-  int issuePrompt(string  prompt,
-                  string  format,
-                  string& response);
-  int parseResposeForRule(Rule  *rule,
-                          string response);
+  int      issuePrompt(string  prompt,
+                       string  format,
+                       string& response);
+  All_type parseResposeForRule(Rule  *rule,
+                               string response);
 
 private:
 

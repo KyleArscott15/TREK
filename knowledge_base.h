@@ -57,11 +57,31 @@ protected:                                                         \
 private:                                                           \
   }
 
+#define RULE_DEFINE_PROP_(rule_name, format, prompt, response_type) \
+  class rule_name : public Rule {                                   \
+public:                                                             \
+    rule_name() {                                                   \
+      responseType = response_type;                                 \
+      setFormat(format);                                            \
+      setPrompt(prompt);                                            \
+    }                                                               \
+    bool evaluateAntecendant();                                     \
+    bool evaluateAction();                                          \
+    int setProperties();                                            \
+protected:                                                          \
+private:                                                            \
+  }
+
 #define RULE (rule_name, format, prompt, response_type, condition, action) { \
     RULE_DEFINE_PROP(rule_name, format, prompt, response_type);              \
     RULE_PROPERTY(rule_name, ONE_SHOT, true);                                \
     RULE_IF(rule_name, condition);                                           \
     RULE_AC(rule_name, action);                                              \
+}
+
+#define INPUT_RULE(rule_name, prompt, response_type, savedValue) { \
+    RULE_DEFINE_PROP(rule_name, "%s\n", prompt, response_type);    \
+    RULE_PROPERTY(rule_name, ONE_SHOT, true);                      \
 }
 
 class Rule;
@@ -101,6 +121,10 @@ public:
     return ERROR;
   }
 
+  virtual int setPromptResponseToWM(All_type at) {
+    return -1;
+  }
+
   int setPrompt(char *input_prompt);
   int setPrompt(string input_prompt);
   int setFormat(char *input_format);
@@ -108,6 +132,10 @@ public:
   string prompt;
   string format;
   TYPE   responseType;
+
+  TYPE getResponseType() {
+    return responseType;
+  }
 
   // int is either
   // a) bool (0 false, 1 true)
@@ -125,7 +153,7 @@ private:
 
 // states
 #define NUM_NIGHTS             "kayaktrue"
-#define HIKING_DISTANCE_M      "hdist" // used internally to differentiate
+#define HIKE_DISTANCE_M        "hdist" // used internally to differentiate
                                        // states,
                                        // does not matter to user
 

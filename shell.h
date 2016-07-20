@@ -12,6 +12,7 @@
 #define DOC string("doc")
 #define EXIT string("exit")
 #define HELP string("help")
+#define WM_CONTENTS string("wm")
 
 class Shell {
 public:
@@ -30,6 +31,7 @@ private:
   int endConsultation();
   int usage();
   int help();
+  int wmContents();
   int recognizeBuiltIn(string response);
 
   UserInput *ui;

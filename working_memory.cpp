@@ -1,26 +1,9 @@
 #include "working_memory.h"
 
-PromptHistory::PromptHistory() {}
-
-PromptHistory::~PromptHistory() {}
-
-PackingList::PackingList() {}
-
-PackingList::~PackingList() {}
-
-static StateTable initializeInitialStateTable() {
-  StateTable st;
-
-  // st[SESSION_DURATION] = new IntegerState(SESSION_DURATION);
-  return st;
-}
-
-static StateTable initial_state_table = initializeInitialStateTable();
-
 WorkingMemory::WorkingMemory() {
   // add in sessional information to initialize the working memory
 #define SESSION_DURATION_MINUTES "session duration minutes"
-  wmStateAccess(WM_ADD, SESSION_DURATION_MINUTES, 65);
+  wmStateAccess(WM_ADD, SESSION_DURATION_MINUTES, All_type(65));
 }
 
 WorkingMemory::~WorkingMemory() {}
@@ -105,5 +88,22 @@ All_type WorkingMemory::getStateValue(void *input) {
   All_type all(6);
 
   return all;
+}
+
+int WorkingMemory::printMemoryDump() {
+  cout << endl;
+  cout << "WORKING MEMORY" << endl;
+  HLINE();
+
+  cout << "State Table: " << endl;
+
+  for (StateTable::iterator it = stateTable.begin(); it != stateTable.end();
+       ++it) {
+    cout << it->first << " => " << it->second << '\n';
+  }
+
+  HLINE();
+
+  return SUCCESS;
 }
 
