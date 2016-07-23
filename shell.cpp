@@ -2,6 +2,8 @@
 #include "knowledge_base.h"
 #include "application_specific_definitions.h"
 
+#include <unistd.h>
+
 Shell::Shell(UserInput       *user_input,
              WorkingMemory   *working_memory,
              InferenceEngine *inference_engine)
@@ -64,10 +66,17 @@ void Shell::run() {
   listSpecialCommands();
   beginConsultation();
 
-  Rule *rule;
+  Rule *rule, rule2;
   string   response;
   int      prompt_success;
   All_type cleanResponse;
+
+  // A a;
+  // B b;
+  // A *p;
+
+  Rule r;
+  HikeDistanceRule hdr;
 
   for (;;) {
     // clear shell variables
@@ -75,10 +84,32 @@ void Shell::run() {
     response.clear();
     prompt_success = ~SCANF_SUCCESS;
 
+    // p = &a;
+    // p->print_me();
+    // p = &b;
+    // p->print_me();
+    // rule = &r;
+    // printf("Answer to rule [%d]\n", r.evaluateAntecendant());
+    // rule = &hdr;
+    // printf("Answer to hdr [%d]\n",  hdr.evaluateAntecendant());
+
     if (ie->inferNextRule(&rule) < SUCCESS) {
-      printf("error with stuff\n");
-      continue;
+      printf("Not rule is true\n");
+      goto end_of_loop;
     }
+
+    // printf("[%s()][%s][%d]\n", __FUNCTION__, __FILE__, __LINE__);
+    // fflush(stdout);
+    // sleep(1);
+    // rule2 = *rule;
+    // rule2.evaluateAntecendant();
+    // printf("[%s()][%s][%d]\n", __FUNCTION__, __FILE__, __LINE__);
+
+    // printf("String: [%s]\n",
+    //   ((HikeDistanceRule)rule2).getPrompt().c_str());
+    // fflush(stdout);
+    // sleep(1);
+
 
     if (rule != NULL) {
       ui->issuePrompt(rule->prompt, rule->format, response);
@@ -99,12 +130,12 @@ void Shell::run() {
     }
 
     // attempt to add the new information to the working memory
-    rule->setPromptResponseToWM(cleanResponse);
+    rule->setPromptResponseToWM(cleanResponse, wm);
 
     continue;
 
 end_of_loop:
-    system("sleep 1");
+    usleep(100);
   }
 
   endConsultation();

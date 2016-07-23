@@ -8,7 +8,7 @@ set -e
 ./crust.sh
 
 #make clean
-make
+make -j 4
 echo "compilation complete----------------------------------"
 
 ./trek

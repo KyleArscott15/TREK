@@ -7,11 +7,14 @@ InferenceEngine::InferenceEngine(KnowledgeBase *knowledgeBase) {
 InferenceEngine::~InferenceEngine() {}
 
 int InferenceEngine::inferNextRule(Rule **rule) {
-  vector<Rule> ruleSet = kb->contendingRules();
+  vector<Rule *> ruleSet = kb->contendingRules();
 
   if (ruleSet.size() > 0) {
-    *rule = &(ruleSet[0]);
-    return SUCCESS;
+    *rule = ruleSet[0];
+
+    if ((*rule)->evaluateAntecendant()) {
+      return SUCCESS;
+    }
   }
   return NO_MATCH;
 }

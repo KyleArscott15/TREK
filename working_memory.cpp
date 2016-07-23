@@ -21,7 +21,6 @@ int WorkingMemory::wmStateAccess(
     if (wmStateAccess(WM_EXISTS, state, optional_value)) {
       return ALREADY_EXISTS;
     }
-
     stateTable[state] = optional_value;
     break;
   };
@@ -96,6 +95,8 @@ int WorkingMemory::printMemoryDump() {
   HLINE();
 
   cout << "State Table: " << endl;
+
+  printf("table count [%d]\n", stateTable.size());
 
   for (StateTable::iterator it = stateTable.begin(); it != stateTable.end();
        ++it) {

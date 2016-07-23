@@ -37,6 +37,26 @@ public:
 
   ~All_type() {}
 
+  string atToString() {
+    string s;
+
+    if (getType() == TYPE_BOOL) {
+      if (b) {
+        s = string("true");
+      } else {
+        s = string("false");
+      }
+    } else if (getType()  == TYPE_STRING) {
+      s = string(s);
+    } else if (getType()  == TYPE_INTEGER) {
+      s = string(to_string(i));
+    } else {
+      s = string("null");
+    }
+
+    return s;
+  }
+
   friend ostream& operator<<(ostream       & os,
                              const All_type& at);
 

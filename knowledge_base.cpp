@@ -1,11 +1,5 @@
 #include "knowledge_base.h"
 
-Rule::Rule()
-{}
-
-Rule::~Rule()
-{}
-
 int Rule::setPrompt(char *input_prompt)
 {
   prompt = string(input_prompt);
@@ -73,18 +67,18 @@ map<string, Frame>KnowledgeBase::initializeFrames()
   return frames;
 }
 
-vector<Rule>KnowledgeBase::contendingRules()
+vector<Rule *>KnowledgeBase::contendingRules()
 {
   // subset of all rules, all which are if(true).
   // Let the inference enginer decide which one to
   // run
-  vector<Rule> rule_set;
+  vector<Rule *> rule_set;
 
   for (vector<Rule *>::iterator it = rules.begin(); it != rules.end();
        it++) {
     Rule *r = *it;
 
-    if (r->evaluateAntecendant()) rule_set.push_back(*r);
+    if (r->evaluateAntecendant()) rule_set.push_back(r);
   }
   return rule_set;
 }
@@ -139,37 +133,34 @@ vector<Rule>KnowledgeBase::contendingRules()
            HIKE_DISTANCE_M);
  */
 
-class HikeDistanceRule : public Rule {
-public:
 
-  HikeDistanceRule() {
-    responseType = TYPE_INTEGER;
-    setFormat("%s\n");
-    setPrompt("How far will you hike, in meters?\n");
-  }
+HikeDistanceRule::HikeDistanceRule() : Rule() {
+  responseType = TYPE_INTEGER;
+  setFormat("%s\n");
+  setPrompt("How far will you hike, in meters?\n");
+}
 
-  ~HikeDistanceRule() {}
+HikeDistanceRule::~HikeDistanceRule() {}
 
-  bool evaluateAntecendant() {
-    return true;
-  }
+bool HikeDistanceRule::evaluateAntecendant() {
+  return true;
+}
 
-  bool evaluateAction() {
-    return false;
-  }
+bool HikeDistanceRule::evaluateAction() {
+  return false;
+}
 
-  int setProperties() {
-    return -1;
-  }
+int HikeDistanceRule::setProperties() {
+  return -1;
+}
 
-  int setPromptResponseToWM(All_type at) {
-    return wmStateAccess(WM_ADD, HIKE_DISTANCE_M, at);
-  }
+int HikeDistanceRule::setPromptResponseToWM(All_type at, WorkingMemory *wm) {
+  return wm->wmStateAccess(WM_ADD, HIKE_DISTANCE_M, at);
+}
 
-protected:
-
-private:
-};
+string HikeDistanceRule::getPrompt() {
+  return string("gold");
+}
 
 /*
    OUTPUT_RULE(BootsRule, wmStateAccess(WM_GET, HIKING_DISTANCE_M, NULL).i >

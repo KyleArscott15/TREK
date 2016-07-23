@@ -92,7 +92,7 @@ public:
   KnowledgeBase();
   ~KnowledgeBase();
   static map<string, Frame> frames;
-  vector<Rule>contendingRules();
+  vector<Rule *>contendingRules();
 
 protected:
 
@@ -104,11 +104,57 @@ private:
   vector<Rule *> rules;
 };
 
-class Rule : public WorkingMemory {
+/*
+   class A {
+   public:
+
+   virtual void print_me(void) {
+    std::cout << "I'm A" << std::endl;
+   }
+
+   virtual ~A() {}
+   };
+ */
+
+/*
+   class Rule : public WorkingMemory {
+   public:
+
+   virtual bool evaluateAntecendant() {
+   return false;
+   }
+
+   virtual ~Rule() {}
+   };
+ */
+
+/*
+   class B : public A {
+   public:
+
+   virtual void print_me(void) {
+    std::cout << "I'm B" << std::endl;
+   }
+   };
+ */
+
+/*
+   class HikeDistanceRule : public Rule {
+   public:
+
+   virtual bool evaluateAntecendant() {
+    return true;
+   }
+   };
+ */
+
+class Rule {
 public:
 
-  Rule();
-  ~Rule();
+  Rule() {}
+
+  virtual ~Rule() {}
+
   virtual bool evaluateAntecendant() {
     return false;
   }
@@ -121,7 +167,7 @@ public:
     return ERROR;
   }
 
-  virtual int setPromptResponseToWM(All_type at) {
+  virtual int setPromptResponseToWM(All_type at, WorkingMemory *wm) {
     return -1;
   }
 
@@ -132,6 +178,10 @@ public:
   string prompt;
   string format;
   TYPE   responseType;
+
+  virtual string getPrompt() {
+    return string("money");
+  }
 
   TYPE getResponseType() {
     return responseType;
@@ -147,6 +197,26 @@ protected:
 
 private:
 };
+
+class HikeDistanceRule : public Rule {
+public:
+
+  HikeDistanceRule();
+
+  ~HikeDistanceRule();
+
+  virtual bool   evaluateAntecendant();
+  virtual bool   evaluateAction();
+  virtual int    setProperties();
+  virtual int    setPromptResponseToWM(All_type       at,
+                                       WorkingMemory *wm);
+  virtual string getPrompt();
+
+protected:
+
+private:
+};
+
 
 // Ways to access WM
 #define F(item) (&KnowledgeBase::frames[item])
