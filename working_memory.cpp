@@ -8,7 +8,7 @@ WorkingMemory::WorkingMemory() {
 
 WorkingMemory::~WorkingMemory() {}
 
-int WorkingMemory::wmStateAccess(
+All_type WorkingMemory::wmStateAccess(
   WORKING_MEMORY_ACTION action,
   string                state,
   All_type              optional_value) {
@@ -18,9 +18,9 @@ int WorkingMemory::wmStateAccess(
   };
 
   case (WM_ADD): {
-    if (wmStateAccess(WM_EXISTS, state, optional_value)) {
-      return ALREADY_EXISTS;
-    }
+    // if (wmStateAccess(WM_EXISTS, state, optional_value)) {
+    // return All_type(-1); // ALREADY_EXISTS;
+    // }
     stateTable[state] = optional_value;
     break;
   };
@@ -30,7 +30,7 @@ int WorkingMemory::wmStateAccess(
   };
 
   case (WM_GET): {
-    break;
+    return stateTable[state];
   };
 
   case (WM_SET): {
@@ -42,12 +42,12 @@ int WorkingMemory::wmStateAccess(
   };
   }
 
-  return SUCCESS;
+  return All_type(-1);
 }
 
-int WorkingMemory::wmListAccess(
+int  WorkingMemory::wmListAccess(
   WORKING_MEMORY_ACTION action,
-  string                state,
+  Frame                *frame,
   All_type              optional_value) {
   switch (action) {
   case (WM_EXISTS): {
@@ -55,11 +55,11 @@ int WorkingMemory::wmListAccess(
   };
 
   case (WM_ADD): {
-    if (wmStateAccess(WM_EXISTS, state, optional_value)) {
-      return ALREADY_EXISTS;
-    }
+    printf("Adding [%s][%s] to list.\n",
+           frame->getName().c_str(), optional_value.atToString(
+             ).c_str());
 
-    stateTable[state] = optional_value;
+    packingList.addFrame(*frame);
     break;
   };
 
@@ -96,8 +96,6 @@ int WorkingMemory::printMemoryDump() {
 
   cout << "State Table: " << endl;
 
-  printf("table count [%d]\n", stateTable.size());
-
   for (StateTable::iterator it = stateTable.begin(); it != stateTable.end();
        ++it) {
     cout << it->first << " => " << it->second << '\n';
@@ -106,5 +104,9 @@ int WorkingMemory::printMemoryDump() {
   HLINE();
 
   return SUCCESS;
+}
+
+int WorkingMemory::printList() {
+  return packingList.printList();
 }
 

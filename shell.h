@@ -13,6 +13,7 @@
 #define EXIT string("exit")
 #define HELP string("help")
 #define WM_CONTENTS string("wm")
+#define PRINT_LIST string("list")
 
 class Shell {
 public:
@@ -32,6 +33,7 @@ private:
   int usage();
   int help();
   int wmContents();
+  int printList();
   int recognizeBuiltIn(string response);
 
   UserInput *ui;

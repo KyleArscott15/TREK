@@ -43,6 +43,11 @@ int Shell::wmContents() {
   return SUCCESS;
 }
 
+int Shell::printList() {
+  wm->printList();
+  return SUCCESS;
+}
+
 int Shell::recognizeBuiltIn(string response) {
   int ret = SUCCESS;
 
@@ -54,6 +59,8 @@ int Shell::recognizeBuiltIn(string response) {
     help();
   } else if (response.compare(WM_CONTENTS) == 0)  {
     wmContents();
+  } else if (response.compare(PRINT_LIST) == 0)  {
+    printList();
   } else {
     ret = NO_MATCH;
   }
@@ -93,8 +100,10 @@ void Shell::run() {
     // rule = &hdr;
     // printf("Answer to hdr [%d]\n",  hdr.evaluateAntecendant());
 
-    if (ie->inferNextRule(&rule) < SUCCESS) {
-      printf("Not rule is true\n");
+    if (ie->inferNextRule(&rule, wm) < SUCCESS) {
+      printf("No rule is true. Exiting\n");
+
+      // endConsultation();
       goto end_of_loop;
     }
 
@@ -112,7 +121,7 @@ void Shell::run() {
 
 
     if (rule != NULL) {
-      ui->issuePrompt(rule->prompt, rule->format, response);
+      ui->issuePrompt(rule->getPrompt(), rule->getFormat(), response);
     } else {
       goto end_of_loop;
     }
@@ -132,10 +141,14 @@ void Shell::run() {
     // attempt to add the new information to the working memory
     rule->setPromptResponseToWM(cleanResponse, wm);
 
+    // if the prompt has an action, activate it now
+    rule->evaluateAction(wm);
+    rule->setRuleTriggered(true);
+
     continue;
 
 end_of_loop:
-    usleep(100);
+    sleep(1);
   }
 
   endConsultation();

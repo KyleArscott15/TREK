@@ -58,7 +58,10 @@ public:
 
   // true if this frame is actually a grouping of other frames
   bool collectionFrame;
-  vector<Frame> collection;
+  vector<Frame>collection;
+
+  friend ostream& operator<<(ostream    & os,
+                             const Frame& frame);
 
 private:
 
@@ -66,5 +69,9 @@ private:
   string name;
 };
 
+inline ostream& operator<<(ostream& out, const Frame& frame) {
+  out << frame.name;
+  return out;
+}
 
 #endif // FRAME_H

@@ -18,10 +18,6 @@
     return true;                     \
   }
 
-typedef enum Rule_Property {
-  ONE_SHOT = 0,
-  PRIORITY = 1
-} RuleProperty;
 #define RULE_PROPERTY(rule_name, property, value) \
   int rule_name::setProperties() {                \
     properties[((property))] = ((value));         \
@@ -79,10 +75,12 @@ private:                                                            \
     RULE_AC(rule_name, action);                                              \
 }
 
-#define INPUT_RULE(rule_name, prompt, response_type, savedValue) { \
+/*
+   #define INPUT_RULE(rule_name, prompt, response_type, savedValue) { \
     RULE_DEFINE_PROP(rule_name, "%s\n", prompt, response_type);    \
     RULE_PROPERTY(rule_name, ONE_SHOT, true);                      \
-}
+   }
+ */
 
 class Rule;
 
@@ -92,7 +90,7 @@ public:
   KnowledgeBase();
   ~KnowledgeBase();
   static map<string, Frame> frames;
-  vector<Rule *>contendingRules();
+  vector<Rule *>contendingRules(WorkingMemory *wm);
 
 protected:
 
@@ -148,52 +146,100 @@ private:
    };
  */
 
+typedef enum Rule_Type {
+  UNASSIGNED_RULE = 0,
+  INPUT_RULE      = 1,
+  PROCESSING_RULE = 2,
+  OUTPUT_RULE     = 3
+} RuleType;
+
+typedef enum Rule_Property {
+  ONE_SHOT = 0,
+  PRIORITY = 1
+} RuleProperty;
+
 class Rule {
 public:
 
-  Rule() {}
+  Rule() {
+    ruleTriggered = false;
+    ruleType      = UNASSIGNED_RULE;
+  }
 
   virtual ~Rule() {}
 
-  virtual bool evaluateAntecendant() {
+  virtual bool evaluateAntecendant(WorkingMemory *wm) {
     return false;
   }
 
-  virtual bool evaluateAction() {
+  virtual bool evaluateAction(WorkingMemory *wm) {
     return false;
   }
 
-  virtual int setProperties() {
-    return ERROR;
+  virtual int setProperty(RuleProperty property, int value) {
+    properties[property] = value;
+    return SUCCESS;
   }
 
   virtual int setPromptResponseToWM(All_type at, WorkingMemory *wm) {
     return -1;
   }
 
-  int setPrompt(char *input_prompt);
-  int setPrompt(string input_prompt);
-  int setFormat(char *input_format);
-  int setFormat(string input_format);
-  string prompt;
-  string format;
-  TYPE   responseType;
-
   virtual string getPrompt() {
-    return string("money");
+    return prompt;
+  }
+
+  virtual string getFormat() {
+    return format;
   }
 
   TYPE getResponseType() {
     return responseType;
   }
 
+  bool setRuleTriggered(bool triggered) {
+    bool returnTrig = getRuleTriggered();
+
+    ruleTriggered = triggered;
+    return returnTrig;
+  }
+
+  bool getRuleTriggered() {
+    return ruleTriggered;
+  }
+
+  bool getProperty(RuleProperty property) {
+    return properties[property];
+  }
+
+  string getRuleName() {
+    return ruleName;
+  }
+
+  RuleType getRuleType() {
+    return ruleType;
+  }
+
+  int setPrompt(char *input_prompt);
+  int setPrompt(string input_prompt);
+  int setFormat(char *input_format);
+  int setFormat(string input_format);
+
+protected:
+
+  string   ruleName; // for output use only
+  string   prompt;
+  string   format;
+  TYPE     responseType;
+  RuleType ruleType;
+  bool     ruleTriggered;
+  bool     oneShot;
+
   // int is either
   // a) bool (0 false, 1 true)
   // b) the integer literal
   // c) an index to a string
   map<RuleProperty, int> properties;
-
-protected:
 
 private:
 };
@@ -205,12 +251,25 @@ public:
 
   ~HikeDistanceRule();
 
-  virtual bool   evaluateAntecendant();
-  virtual bool   evaluateAction();
-  virtual int    setProperties();
-  virtual int    setPromptResponseToWM(All_type       at,
-                                       WorkingMemory *wm);
-  virtual string getPrompt();
+  virtual bool evaluateAntecendant(WorkingMemory *wm);
+  virtual bool evaluateAction(WorkingMemory *wm);
+  virtual int  setPromptResponseToWM(All_type       at,
+                                     WorkingMemory *wm);
+
+protected:
+
+private:
+};
+
+class BootsRule : public Rule {
+public:
+
+  BootsRule();
+
+  ~BootsRule();
+
+  virtual bool evaluateAntecendant(WorkingMemory *wm);
+  virtual bool evaluateAction(WorkingMemory *wm);
 
 protected:
 

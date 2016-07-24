@@ -11,7 +11,8 @@ public:
 
   ~InferenceEngine();
 
-  int inferNextRule(Rule **rule);
+  int inferNextRule(Rule         **rule,
+                    WorkingMemory *wm);
 
 private:
 

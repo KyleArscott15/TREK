@@ -6,13 +6,14 @@ InferenceEngine::InferenceEngine(KnowledgeBase *knowledgeBase) {
 
 InferenceEngine::~InferenceEngine() {}
 
-int InferenceEngine::inferNextRule(Rule **rule) {
-  vector<Rule *> ruleSet = kb->contendingRules();
+int InferenceEngine::inferNextRule(Rule **rule, WorkingMemory *wm) {
+  vector<Rule *> ruleSet = kb->contendingRules(wm);
 
   if (ruleSet.size() > 0) {
     *rule = ruleSet[0];
 
-    if ((*rule)->evaluateAntecendant()) {
+    // inference algorithm: take the first rule you get
+    if ((*rule)->evaluateAntecendant(wm)) {
       return SUCCESS;
     }
   }

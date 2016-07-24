@@ -67,18 +67,37 @@ map<string, Frame>KnowledgeBase::initializeFrames()
   return frames;
 }
 
-vector<Rule *>KnowledgeBase::contendingRules()
+vector<Rule *>KnowledgeBase::contendingRules(WorkingMemory *wm)
 {
   // subset of all rules, all which are if(true).
   // Let the inference enginer decide which one to
-  // run
+  // run. If the rule is
   vector<Rule *> rule_set;
 
   for (vector<Rule *>::iterator it = rules.begin(); it != rules.end();
        it++) {
     Rule *r = *it;
 
-    if (r->evaluateAntecendant()) rule_set.push_back(r);
+    // if one shot and already triggered, then do not return this rule
+    if ((r->getProperty(ONE_SHOT) == true) &&
+        (r->getRuleTriggered() == true)) {
+          printf("Rule [%s] is not going to be used.\n", r->getRuleName().c_str());
+    } else {
+      if (r->evaluateAntecendant(wm)) {
+        if ((r->getRuleType() == PROCESSING_RULE) || (r->getRuleType() ==
+                                                      OUTPUT_RULE)) {
+          printf("Rule [%s] is processing or output.\n", r->getRuleName().c_str());
+          r->evaluateAction(wm);
+          r->setRuleTriggered(true);
+        } else if (r->getRuleType() == INPUT_RULE) {
+          printf("Rule [%s] is an input rule.\n", r->getRuleName().c_str());
+          rule_set.push_back(r);
+        } else {
+          printf("Rule [%s] has no type!\n",      r->getRuleName().c_str());
+          exit(-1);
+        }
+      }
+    }
   }
   return rule_set;
 }
@@ -120,8 +139,8 @@ vector<Rule *>KnowledgeBase::contendingRules()
       the final packing list
  */
 
-#define NO_FORMAT NULL
-#define NO_PROMPT NULL
+#define NO_FORMAT ""
+#define NO_PROMPT ""
 
 // Hiking Rules (below)
 
@@ -135,31 +154,52 @@ vector<Rule *>KnowledgeBase::contendingRules()
 
 
 HikeDistanceRule::HikeDistanceRule() : Rule() {
+  ruleName     = string("HikeDistanceRule");
+  ruleType     = INPUT_RULE;
   responseType = TYPE_INTEGER;
   setFormat("%s\n");
   setPrompt("How far will you hike, in meters?\n");
+  setProperty(ONE_SHOT, false);
 }
 
 HikeDistanceRule::~HikeDistanceRule() {}
 
-bool HikeDistanceRule::evaluateAntecendant() {
+bool HikeDistanceRule::evaluateAntecendant(WorkingMemory *wm) {
   return true;
 }
 
-bool HikeDistanceRule::evaluateAction() {
+bool HikeDistanceRule::evaluateAction(WorkingMemory *wm) {
   return false;
 }
 
-int HikeDistanceRule::setProperties() {
+int HikeDistanceRule::setPromptResponseToWM(All_type at, WorkingMemory *wm) {
+  wm->wmStateAccess(WM_ADD, HIKE_DISTANCE_M, at);
   return -1;
 }
 
-int HikeDistanceRule::setPromptResponseToWM(All_type at, WorkingMemory *wm) {
-  return wm->wmStateAccess(WM_ADD, HIKE_DISTANCE_M, at);
+BootsRule::BootsRule() : Rule() {
+  ruleName     = string("BootsRule");
+  ruleType     = PROCESSING_RULE;
+  responseType = TYPE_INVALID;
+  setFormat(NO_FORMAT);
+  setPrompt(NO_PROMPT);
+  setProperty(ONE_SHOT, false);
 }
 
-string HikeDistanceRule::getPrompt() {
-  return string("gold");
+BootsRule::~BootsRule() {}
+
+bool BootsRule::evaluateAntecendant(WorkingMemory *wm) {
+  int one = (wm->wmStateAccess(WM_GET, HIKE_DISTANCE_M, NULL)).i;
+  int two = BOOT_SUGGESTION_DISTANCE_THRESHOLD_M;
+
+  printf("Boot rule [%d] > [%d]\n", one, two);
+  return one > two;
+}
+
+bool BootsRule::evaluateAction(WorkingMemory *wm) {
+  wm->wmListAccess(WM_ADD, F(BOOTS), All_type(-1)); // xxx KA just stuffed a -1
+                                                    // All_type for no reason
+  return true;
 }
 
 /*
@@ -310,6 +350,7 @@ string HikeDistanceRule::getPrompt() {
 int KnowledgeBase::initializeRules()
 {
   rules.push_back(new HikeDistanceRule());
+  rules.push_back(new BootsRule());
 
   // rules.push_back(new AquaTabsRule());
   return ERROR;

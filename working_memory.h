@@ -18,6 +18,15 @@ enum WORKING_MEMORY_ACTION {
   WM_SET    = 5  // can set only if its added
 };
 
+// WM specific types
+typedef map<string, All_type>StateTable; // XXX KA don't make it a pointer,
+                                         // just a normal. Just plain values
+                                         // in working memory. Version 1 has
+                                         // All_type, version 2 has State
+                                         // object
+class PromptHistory;
+typedef vector<PromptHistory *>HistoryList;
+
 class PromptHistory {
 public:
 
@@ -43,21 +52,21 @@ public:
   int addFrame(Frame frame) {
     string frame_name = frame.getName();
 
-    if (packing_list.count(frame_name) > 0) {
+    if (packingList.count(frame_name) > 0) {
       return ALREADY_EXISTS;
     }
 
-    packing_list[frame_name] = frame;
+    packingList[frame_name] = frame;
     return SUCCESS;
   }
 
   int removeFrame(Frame frame) {
     string frame_name = frame.getName();
 
-    if (packing_list.count(frame_name) == 0) {
+    if (packingList.count(frame_name) == 0) {
       return NO_MATCH;
     }
-    int num_removed = packing_list.erase(frame_name);
+    int num_removed = packingList.erase(frame_name);
 
     if (num_removed) {
       return SUCCESS;
@@ -66,19 +75,30 @@ public:
     }
   }
 
+  int printList() {
+    cout << endl;
+    cout << "PACKING LIST" << endl;
+    HLINE();
+
+    cout << "Packing List Table: " << endl;
+
+    for (map<string, Frame>::iterator it = packingList.begin();
+         it != packingList.end();
+         ++it) {
+      cout << it->first << " => " << it->second << '\n';
+    }
+
+    HLINE();
+
+    return SUCCESS;
+  }
+
 private:
 
-  map<string, Frame> packing_list; // string key is the frame_name of
+  map<string, Frame> packingList; // string key is the frame_name of
   // the frame it stores, used a map
   // for fast "existence" queries
 };
-
-// WM specific types
-typedef map<string, All_type>StateTable; // XXX KA don't make it a pointer,
-                                         // just a normal. Just plain values
-                                         // in working memory. Version 1 has
-                                         // All_type, version 2 has State object
-typedef vector<PromptHistory *>HistoryList;
 
 class WorkingMemory {
 public:
@@ -86,21 +106,19 @@ public:
   WorkingMemory();
   ~WorkingMemory();
 
-  int printMemoryDump();
+  int      printMemoryDump();
 
-  int getHikingDistance() {
-    return 6;
-  }
-
-  int wmStateAccess(
+  All_type wmStateAccess(
     WORKING_MEMORY_ACTION action,
     string                state,
     All_type              optional_value);
 
   int wmListAccess(
     WORKING_MEMORY_ACTION action,
-    string                state,
+    Frame                *frame,
     All_type              optional_value);
+
+  int printList();
 
 private:
 
