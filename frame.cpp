@@ -4,10 +4,17 @@ Frame::Frame() {}
 
 Frame::~Frame() {}
 
-int Frame::setName(char *frame_name) {
+int Frame::setName(string frameName) {
+  int ret = frameName.length();
+
+  name = frameName;
+  return ret;
+}
+
+int Frame::setName(char *frameName) {
   int ret = name.length();
 
-  name = string(frame_name);
+  name = string(frameName);
   return ret;
 }
 

@@ -24,6 +24,7 @@ int Shell::beginConsultation() {
 int Shell::endConsultation() {
   printf("Ending consultation...\n");
   HLINE();
+  wm->saveList(PACKING_LIST_FILENAME);
   exit(-1);
 }
 

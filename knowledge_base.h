@@ -24,63 +24,24 @@
     return SUCCESS;                               \
   }
 
-#define RULE_DEFINE(rule_name, format, prompt, response_type) \
-  class rule_name : public Rule {                             \
-public:                                                       \
-      rule_name() {                                           \
-      responseType = response_type;                           \
-      setFormat(format);                                      \
-      setPrompt(prompt);                                      \
-    }                                                         \
-    bool evaluateAntecendant();                               \
-    bool evaluateAction();                                    \
-protected:                                                    \
-private:                                                      \
+#define INPUT_RULE(rule_name, format, prompt, response_type) \
+  class rule_name : public Rule {                            \
+public:                                                      \
+    rule_name() {                                            \
+      ruleName     = string(rule_name);                      \
+      ruleType     = INPUT_RULE;                             \
+      responseType = response_type;                          \
+      setFormat(format);                                     \
+      setPrompt(prompt);                                     \
+    }                                                        \
+    virtual bool evaluateAntecendant();                      \
+    virtual bool evaluateAction();                           \
+    virtual int  setPromptResponseToWM(All_type       at,    \
+                                       WorkingMemory * wm);  \
+    int setProperties();                                     \
+protected:                                                   \
+private:                                                     \
   }
-
-#define RULE_DEFINE_PROP(rule_name, format, prompt, response_type) \
-  class rule_name : public Rule {                                  \
-public:                                                            \
-    rule_name() {                                                  \
-      responseType = response_type;                                \
-      setFormat(format);                                           \
-      setPrompt(prompt);                                           \
-    }                                                              \
-    bool evaluateAntecendant();                                    \
-    bool evaluateAction();                                         \
-    int setProperties();                                           \
-protected:                                                         \
-private:                                                           \
-  }
-
-#define RULE_DEFINE_PROP_(rule_name, format, prompt, response_type) \
-  class rule_name : public Rule {                                   \
-public:                                                             \
-    rule_name() {                                                   \
-      responseType = response_type;                                 \
-      setFormat(format);                                            \
-      setPrompt(prompt);                                            \
-    }                                                               \
-    bool evaluateAntecendant();                                     \
-    bool evaluateAction();                                          \
-    int setProperties();                                            \
-protected:                                                          \
-private:                                                            \
-  }
-
-#define RULE (rule_name, format, prompt, response_type, condition, action) { \
-    RULE_DEFINE_PROP(rule_name, format, prompt, response_type);              \
-    RULE_PROPERTY(rule_name, ONE_SHOT, true);                                \
-    RULE_IF(rule_name, condition);                                           \
-    RULE_AC(rule_name, action);                                              \
-}
-
-/*
-   #define INPUT_RULE(rule_name, prompt, response_type, savedValue) { \
-    RULE_DEFINE_PROP(rule_name, "%s\n", prompt, response_type);    \
-    RULE_PROPERTY(rule_name, ONE_SHOT, true);                      \
-   }
- */
 
 class Rule;
 
@@ -101,50 +62,6 @@ private:
 
   vector<Rule *> rules;
 };
-
-/*
-   class A {
-   public:
-
-   virtual void print_me(void) {
-    std::cout << "I'm A" << std::endl;
-   }
-
-   virtual ~A() {}
-   };
- */
-
-/*
-   class Rule : public WorkingMemory {
-   public:
-
-   virtual bool evaluateAntecendant() {
-   return false;
-   }
-
-   virtual ~Rule() {}
-   };
- */
-
-/*
-   class B : public A {
-   public:
-
-   virtual void print_me(void) {
-    std::cout << "I'm B" << std::endl;
-   }
-   };
- */
-
-/*
-   class HikeDistanceRule : public Rule {
-   public:
-
-   virtual bool evaluateAntecendant() {
-    return true;
-   }
-   };
- */
 
 typedef enum Rule_Type {
   UNASSIGNED_RULE = 0,
@@ -244,6 +161,23 @@ protected:
 private:
 };
 
+class HikeTrueRule : public Rule {
+public:
+
+  HikeTrueRule();
+
+  ~HikeTrueRule();
+
+  virtual bool evaluateAntecendant(WorkingMemory *wm);
+  virtual bool evaluateAction(WorkingMemory *wm);
+  virtual int  setPromptResponseToWM(All_type       at,
+                                     WorkingMemory *wm);
+
+protected:
+
+private:
+};
+
 class HikeDistanceRule : public Rule {
 public:
 
@@ -276,14 +210,29 @@ protected:
 private:
 };
 
+class AquaTabsRule : public Rule {
+public:
+
+  AquaTabsRule();
+
+  ~AquaTabsRule();
+
+  virtual bool evaluateAntecendant(WorkingMemory *wm);
+  virtual bool evaluateAction(WorkingMemory *wm);
+
+protected:
+
+private:
+};
 
 // Ways to access WM
 #define F(item) (&KnowledgeBase::frames[item])
 
 // states
-#define NUM_NIGHTS             "kayaktrue"
-#define HIKE_DISTANCE_M        "hdist" // used internally to differentiate
-                                       // states,
-                                       // does not matter to user
+// string is used internally to differentiate states
+#define NUM_NIGHTS             "numNights"
+#define HIKE_DISTANCE_M          "hikeDistanceM"
+#define OUTDOORS          "outdoors"
+#define HIKE_TRUE "hikeTrue"
 
 #endif // ifndef KNOWLEDGE_H

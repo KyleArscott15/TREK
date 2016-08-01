@@ -1,6 +1,8 @@
 #ifndef APPLICATION_SPECIFIC_H
 #define APPLICATION_SPECIFIC_H
 
+#define PACKING_LIST_FILENAME string("trek_packing_list.txt")
+
 // http://www.patorjk.com/software/taag/#p=display&f=Alpha&t=TREK
 int cool_ascii_name() {
   printf(

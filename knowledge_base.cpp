@@ -32,13 +32,13 @@ map<string,
     Frame>KnowledgeBase:: frames = KnowledgeBase::initializeFrames();
 
 // Frame references
-#define BOOTS       "boots"
-#define AQUATABS    "aqua tabs"
-#define BASIC_KAYAKING_LIST "basic kayaking list"
-#define FLOATING_ROPE_50_FT "floating rope 50ft"
-#define KAYAK_PADDLE "kayak paddle"
-#define BAILING_DEVICE "bailing bucket"
-#define LIFE_JACKET "life jacket"
+#define BOOTS       string("boots")
+#define AQUATABS    string("aqua tabs")
+#define BASIC_KAYAKING_LIST string("basic kayaking list")
+#define FLOATING_ROPE_50_FT string("floating rope 50ft")
+#define KAYAK_PADDLE string("kayak paddle")
+#define BAILING_DEVICE string("bailing bucket")
+#define LIFE_JACKET string("life jacket")
 map<string, Frame>KnowledgeBase::initializeFrames()
 {
   map<string, Frame> frames;
@@ -47,6 +47,7 @@ map<string, Frame>KnowledgeBase::initializeFrames()
   // useful for TREK only
   Frame
     boots,
+    aquatabs,
     floating_rope_50ft,
     whistle,
     kayak_paddle,
@@ -54,15 +55,18 @@ map<string, Frame>KnowledgeBase::initializeFrames()
     life_jacket
   ;
 
-  boots.setName((char *)"boots");
+  boots.setName(BOOTS);
   All_type shoe_size(13);
   boots.addSlot((char *)"shoe size", (char *)"US", shoe_size);
 
-  floating_rope_50ft.setName((char *)FLOATING_ROPE_50_FT);
+  aquatabs.setName(AQUATABS);
+
+  floating_rope_50ft.setName(FLOATING_ROPE_50_FT);
   All_type length(50);
 
   // create the final frame list
-  frames[BOOTS] = boots;
+  frames[BOOTS]    = boots;
+  frames[AQUATABS] = aquatabs;
 
   return frames;
 }
@@ -77,6 +81,8 @@ vector<Rule *>KnowledgeBase::contendingRules(WorkingMemory *wm)
   for (vector<Rule *>::iterator it = rules.begin(); it != rules.end();
        it++) {
     Rule *r = *it;
+
+          printf("Reviewing rule [%s]\n", r->getRuleName().c_str());
 
     // if one shot and already triggered, then do not return this rule
     if ((r->getProperty(ONE_SHOT) == true) &&
@@ -98,27 +104,11 @@ vector<Rule *>KnowledgeBase::contendingRules(WorkingMemory *wm)
         }
       }
     }
+    fflush(stdout);
   }
+
   return rule_set;
 }
-
-#define BOOT_SUGGESTION_DISTANCE_THRESHOLD_M         (5000)     // m
-#define AQUATAB_SUGGESTION_DISTANCE_THRESHOLD_M         (10000) // m
-
-// XXX KA for quick development, rules are implemted as c++ objects
-
-/*
-   RULE_DEFINE(NumNightsRule, "%s\n", "How many nights will you go?",
-      TYPE_INTEGER);
-   RULE_IF(NumNightsRule, true);
-   RULE_AC(NumNightsRule, wmStateAccess(WM_ADD, WM_STATE, NUM_NIGHTS, NULL));
-
-   RULE_DEFINE_PROP(KayakTrueRule, "%s\n", "Are you kayaking?", TYPE_BOOL);
-   RULE_PROPERTY(KayakTrueRule, ONE_SHOT, true);
-   RULE_IF(KayakTrueRule, true);
-   RULE_AC(KayakTrueRule,
-        wmAccess(WM_ADD, F(BASIC_KAYAKING_LIST), NULL));
- */
 
 /*
    Suggestions:
@@ -144,14 +134,30 @@ vector<Rule *>KnowledgeBase::contendingRules(WorkingMemory *wm)
 
 // Hiking Rules (below)
 
-/*
-   INPUT_RULE(HikeDistanceRule, wmStateAccess(WM_GET,
-                                           HIKING_TRUE,
-                                           NULL) == true,
-           "How far will you hike, in meters?\n", TYPE_INTEGER,
-           HIKE_DISTANCE_M);
- */
+// input rules
 
+HikeTrueRule::HikeTrueRule() : Rule() {
+  ruleName     = string("HikeTrueRule");
+  ruleType     = INPUT_RULE;
+  responseType = TYPE_BOOL;
+  setFormat("%s\n");
+  setPrompt("Are you hiking?");
+  setProperty(ONE_SHOT, true);
+}
+
+HikeTrueRule::~HikeTrueRule() {}
+
+bool HikeTrueRule::evaluateAntecendant(WorkingMemory *wm) {
+  return true;
+}
+
+bool HikeTrueRule::evaluateAction(WorkingMemory *wm) {
+  return false;
+}
+
+int HikeTrueRule::setPromptResponseToWM(All_type at, WorkingMemory *wm) {
+  return wm->wmStateAccess(WM_ADD, HIKE_TRUE, at);
+}
 
 HikeDistanceRule::HikeDistanceRule() : Rule() {
   ruleName     = string("HikeDistanceRule");
@@ -165,7 +171,15 @@ HikeDistanceRule::HikeDistanceRule() : Rule() {
 HikeDistanceRule::~HikeDistanceRule() {}
 
 bool HikeDistanceRule::evaluateAntecendant(WorkingMemory *wm) {
-  return true;
+  All_type hike = wm->getStateValue(HIKE_TRUE);
+
+  if (hike.type == TYPE_INVALID) {
+    return false;
+  } else if (hike.type == TYPE_BOOL) {
+    return hike.b == true;
+  } else {
+    return false;
+  }
 }
 
 bool HikeDistanceRule::evaluateAction(WorkingMemory *wm) {
@@ -173,13 +187,16 @@ bool HikeDistanceRule::evaluateAction(WorkingMemory *wm) {
 }
 
 int HikeDistanceRule::setPromptResponseToWM(All_type at, WorkingMemory *wm) {
-  wm->wmStateAccess(WM_ADD, HIKE_DISTANCE_M, at);
-  return -1;
+  return wm->wmStateAccess(WM_ADD, HIKE_DISTANCE_M, at);
 }
+
+// processing rules
+
+// output rules
 
 BootsRule::BootsRule() : Rule() {
   ruleName     = string("BootsRule");
-  ruleType     = PROCESSING_RULE;
+  ruleType     = OUTPUT_RULE;
   responseType = TYPE_INVALID;
   setFormat(NO_FORMAT);
   setPrompt(NO_PROMPT);
@@ -188,35 +205,57 @@ BootsRule::BootsRule() : Rule() {
 
 BootsRule::~BootsRule() {}
 
+#define BOOT_SUGGESTION_DISTANCE_THRESHOLD_M         (4000)
 bool BootsRule::evaluateAntecendant(WorkingMemory *wm) {
-  int one = (wm->wmStateAccess(WM_GET, HIKE_DISTANCE_M, NULL)).i;
-  int two = BOOT_SUGGESTION_DISTANCE_THRESHOLD_M;
+  All_type dist = wm->getStateValue(HIKE_DISTANCE_M);
 
-  printf("Boot rule [%d] > [%d]\n", one, two);
-  return one > two;
+  if (dist.type == TYPE_INVALID) {
+    return false;
+  } else {
+    return dist.i > BOOT_SUGGESTION_DISTANCE_THRESHOLD_M;
+  }
 }
 
 bool BootsRule::evaluateAction(WorkingMemory *wm) {
-  wm->wmListAccess(WM_ADD, F(BOOTS), All_type(-1)); // xxx KA just stuffed a -1
-                                                    // All_type for no reason
+  wm->wmListAccess(WM_ADD, F(BOOTS), All_type(-1)); // xxx KA
+  return true;
+}
+
+AquaTabsRule::AquaTabsRule() : Rule() {
+  ruleName     = string("AquaTabsRule");
+  ruleType     = OUTPUT_RULE;
+  responseType = TYPE_INVALID;
+  setFormat(NO_FORMAT);
+  setPrompt(NO_PROMPT);
+  setProperty(ONE_SHOT, false);
+}
+
+AquaTabsRule::~AquaTabsRule() {}
+
+#define AQUATAB_SUGGESTION_DISTANCE_THRESHOLD_M         (5000)
+#define AQUATAB_NIGHT_THRESHOLD (1)
+bool AquaTabsRule::evaluateAntecendant(WorkingMemory *wm) {
+  All_type dist      = wm->getStateValue(HIKE_DISTANCE_M);
+  All_type outdoors  = wm->getStateValue(OUTDOORS);
+  All_type numNights = wm->getStateValue(NUM_NIGHTS);
+
+  // if ((dist.type == TYPE_INVALID)
+  //   || (outdoors.type == TYPE_INVALID)
+  //    || (numNights.type == TYPE_INVALID)) {
+  //  return false;
+  // } else {
+  return dist.i > AQUATAB_SUGGESTION_DISTANCE_THRESHOLD_M ||
+         (outdoors.b && numNights.i > AQUATAB_NIGHT_THRESHOLD);
+
+  // }
+}
+
+bool AquaTabsRule::evaluateAction(WorkingMemory *wm) {
+  wm->wmListAccess(WM_ADD, F(AQUATABS), All_type(-1)); // xxx KA
   return true;
 }
 
 /*
-   OUTPUT_RULE(BootsRule, wmStateAccess(WM_GET, HIKING_DISTANCE_M, NULL).i >
-      BOOT_SUGGESTION_DISTANCE_THRESHOLD_M, wmListAccess(WM_ADD, F(BOOTS), NULL)
-
-   OUTPUT_RULE(AquaTabsRule,
-   wmStateAccess(WM_GET,
-                   HIKING_DISTANCE_M,
-                   NULL).i > AQUATAB_SUGGESTION_DISTANCE_THRESHOLD_M)
- || (wmStateAccess(WM_GET,
-                  OUTDOORS, NULL).b &&
-    wmStateAccess(WM_GET, NUM_NIGHTS, NULL) > AQUATAB_NIGHT_THRESHOLD),
-   wmListAccess(WM_ADD, F(AQUATABS), NULL);
-
-   INPUT_RULE(HikeTrueRule, true, "Are you hiking?\n", TYPE_BOOL, HIKING_TRUE);
-
    OUTPUT_RULE(BasicHikingListRule, wmStateAccess(WM_GET, HIKING_TRUE, NULL) ==
  ||||||||||||||||||||||||||||||||true, wmListAccess(WM_ADD,
  |||||||||||||||||||||||||||||||F(BASIC_HIKING_LIST),
@@ -351,6 +390,8 @@ int KnowledgeBase::initializeRules()
 {
   rules.push_back(new HikeDistanceRule());
   rules.push_back(new BootsRule());
+  rules.push_back(new AquaTabsRule());
+  rules.push_back(new HikeTrueRule());
 
   // rules.push_back(new AquaTabsRule());
   return ERROR;

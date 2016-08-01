@@ -51,7 +51,8 @@ public:
     return name;
   }
 
-  int setName(char *frame_name);
+  int setName(string frameName);
+  int setName(char *frameName);
   int addSlot(char    *slot_name,
               char    *unit,
               All_type default_val);

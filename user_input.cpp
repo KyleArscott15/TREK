@@ -34,7 +34,16 @@ All_type UserInput::parseResposeForRule(Rule  *rule,
   at.type = rule->getResponseType();
 
   if (at.type == TYPE_BOOL) {
-    // make sure it a {1,Y,true} or {0,N,false}
+    // make sure {1,y,Y,true} or {0,n,N,false}
+    if ((response == "1") || (response == "y") || (response == "Y") ||
+        (response == "true")) {
+      at.b = true;
+    } else if ((response == "0") || (response == "n") || (response == "N") ||
+               (response == "false")) {
+      at.b = false;
+    } else {
+      at.b = false;
+    }
   } else if (at.type == TYPE_STRING) {
     // put as is into wm
     at.type = TYPE_INVALID;

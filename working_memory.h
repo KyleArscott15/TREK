@@ -89,6 +89,8 @@ public:
     }
 
     HLINE();
+    cout << endl;
+    cout << endl;
 
     return SUCCESS;
   }
@@ -106,9 +108,9 @@ public:
   WorkingMemory();
   ~WorkingMemory();
 
-  int      printMemoryDump();
+  int printMemoryDump();
 
-  All_type wmStateAccess(
+  int wmStateAccess(
     WORKING_MEMORY_ACTION action,
     string                state,
     All_type              optional_value);
@@ -118,16 +120,19 @@ public:
     Frame                *frame,
     All_type              optional_value);
 
-  int printList();
+  int      printList();
+  All_type getStateValue(string state);
+
+  int      saveList(string filename);
 
 private:
+
+  int memoryDump(string& returnString);
 
   // these are the 3 main sections of the working memory
   StateTable  stateTable;
   HistoryList promptHistory;
   PackingList packingList;
-
-  All_type getStateValue(void *input);
 };
 
 #endif // ifndef WORKING_MEMORY_H

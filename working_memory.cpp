@@ -1,4 +1,7 @@
 #include "working_memory.h"
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
 
 WorkingMemory::WorkingMemory() {
   // add in sessional information to initialize the working memory
@@ -8,29 +11,31 @@ WorkingMemory::WorkingMemory() {
 
 WorkingMemory::~WorkingMemory() {}
 
-All_type WorkingMemory::wmStateAccess(
+int WorkingMemory::wmStateAccess(
   WORKING_MEMORY_ACTION action,
   string                state,
   All_type              optional_value) {
   switch (action) {
   case (WM_EXISTS): {
-    break;
+    if (stateTable.count(state) > 0) {
+      return true;
+    } else {
+      return false;
+    }
   };
 
   case (WM_ADD): {
     // if (wmStateAccess(WM_EXISTS, state, optional_value)) {
-    // return All_type(-1); // ALREADY_EXISTS;
+    //  return ALREADY_EXISTS;
     // }
+    printf("Adding [%s][%s] to wm.\n", state.c_str(),
+           optional_value.atToString().c_str());
     stateTable[state] = optional_value;
     break;
   };
 
   case (WM_REMOVE): {
     break;
-  };
-
-  case (WM_GET): {
-    return stateTable[state];
   };
 
   case (WM_SET): {
@@ -42,7 +47,7 @@ All_type WorkingMemory::wmStateAccess(
   };
   }
 
-  return All_type(-1);
+  return SUCCESS;
 }
 
 int  WorkingMemory::wmListAccess(
@@ -83,16 +88,32 @@ int  WorkingMemory::wmListAccess(
   return SUCCESS;
 }
 
-All_type WorkingMemory::getStateValue(void *input) {
-  All_type all(6);
+All_type WorkingMemory::getStateValue(string state) {
+  All_type atReturn;
 
-  return all;
+  if (stateTable.count(state) == 0) {
+    // if you query for something that is not there,
+    // like the statement below, you will create it
+    atReturn.type = TYPE_INVALID;
+  } else {
+    atReturn = stateTable[state];
+  }
+  return atReturn;
 }
 
 int WorkingMemory::printMemoryDump() {
+  string s;
+
+  return memoryDump(s);
+}
+
+int WorkingMemory::memoryDump(string& returnString) {
+  string output;
+
   cout << endl;
   cout << "WORKING MEMORY" << endl;
-  HLINE();
+
+  // HLINE();
 
   cout << "State Table: " << endl;
 
@@ -101,12 +122,266 @@ int WorkingMemory::printMemoryDump() {
     cout << it->first << " => " << it->second << '\n';
   }
 
-  HLINE();
+  // HLINE();
+  cout << endl;
+  cout << endl;
+
+  // cout << output;
+
+  // if (returnString != NULL) {
+  //  returnString = output;
+  // }
 
   return SUCCESS;
 }
 
 int WorkingMemory::printList() {
   return packingList.printList();
+}
+
+int WorkingMemory::saveList(string filename) {
+  int fd = open(
+    filename.c_str(), O_WRONLY | O_CREAT | S_IWGRP | S_IRGRP | S_IRUSR | S_IWUSR); //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   // xxx
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   // KA
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   // why
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   // does
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   // this
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   // not
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   // create
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   // correct
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   //
+                                                                                   // permissions?
+  char buffer[2048];
+
+  bzero(buffer, 2048);
+  char *h = "hello there friend\n";
+  memcpy(buffer, h, strlen(h));
+  write(fd, buffer, strlen(buffer));
+  close(fd);
 }
 
