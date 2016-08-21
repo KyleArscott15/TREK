@@ -85,6 +85,9 @@ public:
 
   virtual ~Rule() {}
 
+  bool         boolStateValue(WorkingMemory *wm,
+                              string         state);
+
   virtual bool evaluateAntecendant(WorkingMemory *wm) {
     return false;
   }
@@ -161,78 +164,63 @@ protected:
 private:
 };
 
-class HikeTrueRule : public Rule {
-public:
+// input rules
 
-  HikeTrueRule();
+#define INPUT_RULE_DEFINE(ruleName)                         \
+  class ruleName : public Rule {                            \
+public:                                                     \
+    ruleName();                                             \
+    ~ruleName();                                            \
+    virtual bool   evaluateAntecendant(WorkingMemory * wm); \
+    virtual bool evaluateAction(WorkingMemory * wm);        \
+    virtual int  setPromptResponseToWM(All_type       at,   \
+                                       WorkingMemory * wm); \
+protected:                                                  \
+private:                                                    \
+  };                                                        \
 
-  ~HikeTrueRule();
+INPUT_RULE_DEFINE(HikeTrueRule);
+INPUT_RULE_DEFINE(CampingTrueRule);
+INPUT_RULE_DEFINE(CarCampingTrueRule);
+INPUT_RULE_DEFINE(KayakingTrueRule);
+INPUT_RULE_DEFINE(KayakingNightTrueRule);
+INPUT_RULE_DEFINE(HikeDistanceRule);
 
-  virtual bool evaluateAntecendant(WorkingMemory *wm);
-  virtual bool evaluateAction(WorkingMemory *wm);
-  virtual int  setPromptResponseToWM(All_type       at,
-                                     WorkingMemory *wm);
+// processing rules
 
-protected:
+// output rules
 
-private:
-};
+#define OUTPUT_RULE_DEFINE(ruleName)                        \
+  class ruleName : public Rule {                            \
+public:                                                     \
+    ruleName();                                             \
+    ~ruleName();                                            \
+    virtual bool   evaluateAntecendant(WorkingMemory * wm); \
+    virtual bool evaluateAction(WorkingMemory * wm);        \
+protected:                                                  \
+private:                                                    \
+  };
 
-class HikeDistanceRule : public Rule {
-public:
-
-  HikeDistanceRule();
-
-  ~HikeDistanceRule();
-
-  virtual bool evaluateAntecendant(WorkingMemory *wm);
-  virtual bool evaluateAction(WorkingMemory *wm);
-  virtual int  setPromptResponseToWM(All_type       at,
-                                     WorkingMemory *wm);
-
-protected:
-
-private:
-};
-
-class BootsRule : public Rule {
-public:
-
-  BootsRule();
-
-  ~BootsRule();
-
-  virtual bool evaluateAntecendant(WorkingMemory *wm);
-  virtual bool evaluateAction(WorkingMemory *wm);
-
-protected:
-
-private:
-};
-
-class AquaTabsRule : public Rule {
-public:
-
-  AquaTabsRule();
-
-  ~AquaTabsRule();
-
-  virtual bool evaluateAntecendant(WorkingMemory *wm);
-  virtual bool evaluateAction(WorkingMemory *wm);
-
-protected:
-
-private:
-};
+OUTPUT_RULE_DEFINE(BootsRule);
+OUTPUT_RULE_DEFINE(AquaTabsRule);
+OUTPUT_RULE_DEFINE(BasicHikingListRule);
+OUTPUT_RULE_DEFINE(BasicCampingListRule);
+OUTPUT_RULE_DEFINE(BasicKayakingListRule);
+OUTPUT_RULE_DEFINE(BasicKayakingListNightRule);
+OUTPUT_RULE_DEFINE(BasicCarCampingRule);
 
 // Ways to access WM
 #define F(item) (&KnowledgeBase::frames[item])
 
 // states
 // string is used internally to differentiate states
-#define NUM_NIGHTS             "numNights"
-#define HIKE_DISTANCE_M          "hikeDistanceM"
-#define OUTDOORS          "outdoors"
-#define HIKE_TRUE "hikeTrue"
+#define NUM_NIGHTS              string("numNights")
+#define HIKE_DISTANCE_M         string("hikeDistanceM")
+#define OUTDOORS                string("outdoors")
+#define HIKE_TRUE               string("hikeTrue")
+#define CAMPING_TRUE            string("campingTrue")
+#define CAR_CAMPING_TRUE        string("carCampingTrue")
+#define KAYAKING_TRUE           string("kayakingTrue")
+#define KAYAKING_NIGHT_TRUE     string("kayakingNightTrue")
 
 #endif // ifndef KNOWLEDGE_H

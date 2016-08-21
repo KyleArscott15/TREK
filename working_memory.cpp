@@ -28,7 +28,7 @@ int WorkingMemory::wmStateAccess(
     // if (wmStateAccess(WM_EXISTS, state, optional_value)) {
     //  return ALREADY_EXISTS;
     // }
-    printf("Adding [%s][%s] to wm.\n", state.c_str(),
+      printf("Adding [%s][%s] to wm.\n", state.c_str(),
            optional_value.atToString().c_str());
     stateTable[state] = optional_value;
     break;
@@ -43,7 +43,7 @@ int WorkingMemory::wmStateAccess(
   };
 
   default: {
-    printf("Default for %s\n", __FUNCTION__);
+      printf("Default for %s\n", __FUNCTION__);
   };
   }
 
@@ -60,11 +60,26 @@ int  WorkingMemory::wmListAccess(
   };
 
   case (WM_ADD): {
-    printf("Adding [%s][%s] to list.\n",
+      printf("Adding [%s][%s] to list.\n",
            frame->getName().c_str(), optional_value.atToString(
              ).c_str());
 
-    packingList.addFrame(*frame);
+    // if the frame is a collection frame, then unpack the collection
+    // and add each frame individually
+    if (frame->isCollection()) {
+      printf("Frame [%s] is a collection.\n", frame->getName().c_str());
+
+      vector<Frame> collection = frame->getCollection();
+
+      // iterate through each item and add them recursively to the packing list
+      for (vector<Frame>::iterator it = collection.begin(); it != collection.end();
+           ++it) {
+        wmListAccess(WM_ADD, &(*it), All_type(-1));
+      }
+    } else {
+      packingList.addFrame(*frame);
+    }
+
     break;
   };
 
@@ -141,246 +156,17 @@ int WorkingMemory::printList() {
 
 int WorkingMemory::saveList(string filename) {
   int fd = open(
-    filename.c_str(), O_WRONLY | O_CREAT | S_IWGRP | S_IRGRP | S_IRUSR | S_IWUSR); //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   // xxx
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   // KA
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   // why
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   // does
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   // this
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   // not
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   // create
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   // correct
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   //
-                                                                                   // permissions?
-  char buffer[2048];
+    filename.c_str(),
+    O_WRONLY | O_CREAT | O_TRUNC,
+    S_IWGRP  | S_IRGRP | S_IRUSR | S_IWUSR);
 
-  bzero(buffer, 2048);
-  char *h = "hello there friend\n";
-  memcpy(buffer, h, strlen(h));
+  string list = packingList.returnList();
+
+  char buffer[list.length()];
+
+  bzero(buffer, list.length());
+
+  memcpy(buffer, list.c_str(), list.length());
   write(fd, buffer, strlen(buffer));
   close(fd);
 }

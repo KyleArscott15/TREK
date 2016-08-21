@@ -57,14 +57,30 @@ public:
               char    *unit,
               All_type default_val);
 
-  // true if this frame is actually a grouping of other frames
-  bool collectionFrame;
-  vector<Frame>collection;
+  bool isCollection() {
+    return collectionFrame;
+  }
+
+  vector<Frame>getCollection() {
+    return collection;
+  }
+
+  bool setCollection(vector<Frame>newCollection) {
+    bool wasCollectionFrameBefore = collectionFrame;
+
+    collection      = newCollection;
+    collectionFrame = true;
+    return wasCollectionFrameBefore;
+  }
 
   friend ostream& operator<<(ostream    & os,
                              const Frame& frame);
 
 private:
+
+  // true if this frame is actually a grouping of other frames
+  bool collectionFrame;
+  vector<Frame> collection;
 
   vector<Slot> slots;
   string name;

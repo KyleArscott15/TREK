@@ -75,22 +75,47 @@ public:
     }
   }
 
-  int printList() {
-    cout << endl;
-    cout << "PACKING LIST" << endl;
-    HLINE();
+  string returnList() {
+    string list;
 
-    cout << "Packing List Table: " << endl;
+    list += string("\n");
+    list += string("PACKING LIST\n");
+    list += string("Packing List Table: \n");
 
     for (map<string, Frame>::iterator it = packingList.begin();
          it != packingList.end();
          ++it) {
-      cout << it->first << " => " << it->second << '\n';
+      list += it->first;
+      list += string(" => ");
+      list += it->second.getName();
+      list += string("\n");
     }
 
-    HLINE();
-    cout << endl;
-    cout << endl;
+    list += string("\n");
+
+    return list;
+  }
+
+  int printList() {
+    /*
+       cout << endl;
+       cout << "PACKING LIST" << endl;
+       HLINE();
+
+       cout << "Packing List Table: " << endl;
+
+       for (map<string, Frame>::iterator it = packingList.begin();
+         it != packingList.end();
+       ++it) {
+       cout << it->first << " => " << it->second << '\n';
+       }
+
+       HLINE();
+       cout << endl;
+       cout << endl;
+     */
+
+    cout << returnList();
 
     return SUCCESS;
   }

@@ -1,9 +1,22 @@
 #include "user_input.h"
 #include <stdexcept>
 
-int UserInput::issuePrompt(string prompt, string format, string& response) {
+int UserInput::issuePrompt(Rule *rule, string& response) {
   // issue the prompt to the console
-  printf(format.c_str(), prompt.c_str());
+  printf("%s %s\n", rule->getPrompt().c_str(), userOptions(
+           rule->getResponseType()).c_str());
+
+  // get the user response
+  getline(cin, response);
+
+  response = sanitizeInput(response);
+
+  return SUCCESS;
+}
+
+int UserInput::issueBuiltInPrompt(string& response) {
+  // issue the prompt to the console
+  printf("%s %s\n", "Use any builtin command:", "::");
 
   // get the user response
   getline(cin, response);
@@ -18,6 +31,28 @@ string UserInput::sanitizeInput(string raw_response) {
 
   sanitized_response = raw_response;
   return sanitized_response;
+}
+
+string UserInput::userOptions(TYPE promptType) {
+  switch (promptType) {
+  case TYPE_BOOL:
+    return string("[1,y,Y,yes,true] or [0,n,N,no,false]");
+
+    break;
+
+  case TYPE_STRING:
+    return string("[abc...]");
+
+    break;
+
+  case TYPE_INTEGER:
+    return string("[123...]");
+
+    break;
+
+  default:
+    return string("");
+  }
 }
 
 All_type UserInput::parseResposeForRule(Rule  *rule,
@@ -36,9 +71,11 @@ All_type UserInput::parseResposeForRule(Rule  *rule,
   if (at.type == TYPE_BOOL) {
     // make sure {1,y,Y,true} or {0,n,N,false}
     if ((response == "1") || (response == "y") || (response == "Y") ||
+        (response == "yes") ||
         (response == "true")) {
       at.b = true;
     } else if ((response == "0") || (response == "n") || (response == "N") ||
+               (response == "no") ||
                (response == "false")) {
       at.b = false;
     } else {

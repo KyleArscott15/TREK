@@ -102,10 +102,12 @@ void Shell::run() {
     // printf("Answer to hdr [%d]\n",  hdr.evaluateAntecendant());
 
     if (ie->inferNextRule(&rule, wm) < SUCCESS) {
-      printf("No rule is true. Exiting\n");
+      printf("No rule is true.\n");
+      ui->issueBuiltInPrompt(response);
 
       // endConsultation();
-      goto end_of_loop;
+      // goto end_of_loop;
+      goto processBuiltIn;
     }
 
     // printf("[%s()][%s][%d]\n", __FUNCTION__, __FILE__, __LINE__);
@@ -122,10 +124,12 @@ void Shell::run() {
 
 
     if (rule != NULL) {
-      ui->issuePrompt(rule->getPrompt(), rule->getFormat(), response);
+      ui->issuePrompt(rule, response);
     } else {
       goto end_of_loop;
     }
+
+processBuiltIn:
 
     if (recognizeBuiltIn(response) == SUCCESS) {
       continue;
