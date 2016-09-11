@@ -25,7 +25,7 @@ int Shell::endConsultation() {
   printf("Ending consultation...\n");
   HLINE();
   wm->saveList(PACKING_LIST_FILENAME);
-  exit(-1);
+  exit(0);
 }
 
 int Shell::usage() {
@@ -66,6 +66,17 @@ int Shell::recognizeBuiltIn(string response) {
     ret = NO_MATCH;
   }
   return ret;
+}
+
+bool Shell::ruleNull(Rule *rule) {
+  if (rule == NULL) {
+    return true;
+  }
+
+  // check other fields, like rule type
+  // to see if it is valid
+
+  return false;
 }
 
 void Shell::run() {
@@ -136,24 +147,28 @@ processBuiltIn:
     }
 
     // no special commands, parse user input
-    cleanResponse = ui->parseResposeForRule(rule, response);
+    if (ruleNull(rule) == false) {
+      cleanResponse = ui->parseResposeForRule(rule, response);
+    }
 
     if (cleanResponse.getType() == TYPE_INVALID) {
       printf("Please format your input and try again...\n\n");
       goto end_of_loop;
     }
 
-    // attempt to add the new information to the working memory
-    rule->setPromptResponseToWM(cleanResponse, wm);
+    if (ruleNull(rule) == false) {
+      // attempt to add the new information to the working memory
+      rule->setPromptResponseToWM(cleanResponse, wm);
 
-    // if the prompt has an action, activate it now
-    rule->evaluateAction(wm);
-    rule->setRuleTriggered(true);
+      // if the prompt has an action, activate it now
+      rule->evaluateAction(wm);
+      rule->setRuleTriggered(true);
+    }
 
     continue;
 
 end_of_loop:
-    sleep(1);
+    usleep(500000);
   }
 
   endConsultation();

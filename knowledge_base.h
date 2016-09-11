@@ -85,8 +85,18 @@ public:
 
   virtual ~Rule() {}
 
-  bool         boolStateValue(WorkingMemory *wm,
-                              string         state);
+  bool         stateExists(WorkingMemory *wm,
+                           string         state);
+  bool         stateTrue(WorkingMemory *wm,
+                         string         state);
+  bool         stateFalse(WorkingMemory *wm,
+                          string         state);
+  bool         stateIsBool(WorkingMemory *wm,
+                           string         state);
+  bool         stateExistsAndTrue(WorkingMemory *wm,
+                                  string         state);
+  bool         stateExistsAndFalse(WorkingMemory *wm,
+                                   string         state);
 
   virtual bool evaluateAntecendant(WorkingMemory *wm) {
     return false;
@@ -208,6 +218,7 @@ OUTPUT_RULE_DEFINE(BasicCampingListRule);
 OUTPUT_RULE_DEFINE(BasicKayakingListRule);
 OUTPUT_RULE_DEFINE(BasicKayakingListNightRule);
 OUTPUT_RULE_DEFINE(BasicCarCampingRule);
+OUTPUT_RULE_DEFINE(NotCarCampingFoodRule);
 
 // Ways to access WM
 #define F(item) (&KnowledgeBase::frames[item])

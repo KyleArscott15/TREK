@@ -28,13 +28,14 @@ protected:
 
 private:
 
-  int beginConsultation();
-  int endConsultation();
-  int usage();
-  int help();
-  int wmContents();
-  int printList();
-  int recognizeBuiltIn(string response);
+  int  beginConsultation();
+  int  endConsultation();
+  int  usage();
+  int  help();
+  int  wmContents();
+  int  printList();
+  int  recognizeBuiltIn(string response);
+  bool ruleNull(Rule *rule);
 
   UserInput *ui;
   WorkingMemory   *wm;

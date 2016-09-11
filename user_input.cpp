@@ -79,7 +79,7 @@ All_type UserInput::parseResposeForRule(Rule  *rule,
                (response == "false")) {
       at.b = false;
     } else {
-      at.b = false;
+      at.type = TYPE_INVALID;
     }
   } else if (at.type == TYPE_STRING) {
     // put as is into wm

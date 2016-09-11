@@ -4,13 +4,14 @@
 CC=gcc #arm-linux-gnueabi-gcc#gcc
 CXX=g++ #arm-linux-gnueabihf-g++-4.6#arm-linux-gnueabi-g++#g++
 RM=rm -f
-CPPFLAGS=-I. -std=c++0x -g #-std=gnu++0x #-Wall -Weffc++
+CPPFLAGS += -DDEBUG -I. -std=c++0x -g #-std=gnu++0x #-Wall -Weffc++
+LDLIBS += -lpthread
 
 FINAL_EXECUTABLE_NAME=trek
 
 SRCS=main.cpp state.cpp frame.cpp working_memory.cpp \
      knowledge_base.cpp inference_engine.cpp user_input.cpp \
-     application_specific_definitions.cpp shell.cpp types.cpp
+     application_specific_definitions.cpp shell.cpp types.cpp latex.cpp
 OBJS=$(subst .cpp,.o,$(SRCS))
 
 all: trek

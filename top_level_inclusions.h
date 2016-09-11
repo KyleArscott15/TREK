@@ -13,6 +13,7 @@
 #include "types.h"
 #include "values.h"
 #include "util.h"
+#include "debug_log.h"
 
 using namespace std;
 

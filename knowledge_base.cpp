@@ -1,17 +1,49 @@
 #include "knowledge_base.h"
 
-bool Rule::boolStateValue(WorkingMemory *wm, string state) {
+bool Rule::stateExists(WorkingMemory *wm, string state) {
   All_type stateVal = wm->getStateValue(state);
 
-  if (stateVal.type == TYPE_INVALID) {
+  switch (stateVal.type) {
+  case TYPE_INVALID:
     return false;
-  } else {
-    if (stateVal.type == TYPE_BOOL) {
-      return stateVal.b;
-    } else {
-      return false;
-    }
+
+  case TYPE_BOOL:
+  case TYPE_INTEGER:
+  case TYPE_STRING:
+  case TYPE_STATE:
+    return true;
+
+  default:
+    return false;
   }
+}
+
+bool Rule::stateTrue(WorkingMemory *wm, string state) {
+  All_type stateVal = wm->getStateValue(state);
+
+  return stateVal.b == true;
+}
+
+bool Rule::stateFalse(WorkingMemory *wm, string state) {
+  return !stateTrue(wm, state);
+}
+
+bool Rule::stateIsBool(WorkingMemory *wm, string state) {
+  All_type stateVal = wm->getStateValue(state);
+
+  if (stateVal.type == TYPE_BOOL) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+bool Rule::stateExistsAndTrue(WorkingMemory *wm, string state) {
+  return stateExists(wm, state) && stateIsBool(wm, state) && stateTrue(wm, state);
+}
+
+bool Rule::stateExistsAndFalse(WorkingMemory *wm, string state) {
+  return stateExists(wm, state) && stateIsBool(wm, state) && stateFalse(wm, state);
 }
 
 int Rule::setPrompt(char *input_prompt)
@@ -410,24 +442,28 @@ vector<Rule *>KnowledgeBase::contendingRules(WorkingMemory *wm)
        it++) {
     Rule *r = *it;
 
-          printf("Reviewing rule [%s]\n", r->getRuleName().c_str());
+          D(KBA, "Reviewing rule [%s]\n", r->getRuleName().c_str());
 
     // if one shot and already triggered, then do not return this rule
     if ((r->getProperty(ONE_SHOT) == true) &&
         (r->getRuleTriggered() == true)) {
-          printf("Rule [%s] is not going to be used.\n", r->getRuleName().c_str());
+          D(KBA, "Rule [%s] is not going to be used.\n",
+        r->getRuleName().c_str());
     } else {
       if (r->evaluateAntecendant(wm)) {
         if ((r->getRuleType() == PROCESSING_RULE) || (r->getRuleType() ==
                                                       OUTPUT_RULE)) {
-          printf("Rule [%s] is processing or output.\n", r->getRuleName().c_str());
+          D(KBA, "Rule [%s] is processing or output.\n",
+            r->getRuleName().c_str());
           r->evaluateAction(wm);
           r->setRuleTriggered(true);
         } else if (r->getRuleType() == INPUT_RULE) {
-          printf("Rule [%s] is an input rule.\n", r->getRuleName().c_str());
+          D(KBA, "Rule [%s] is an input rule.\n",
+            r->getRuleName().c_str());
           rule_set.push_back(r);
         } else {
-          printf("Rule [%s] has no type!\n",      r->getRuleName().c_str());
+          D(KBA, "Rule [%s] has no type!\n",
+            r->getRuleName().c_str());
           exit(-1);
         }
       }
@@ -507,7 +543,8 @@ bool HikeTrueRule::evaluateAction(WorkingMemory *wm) {
   return false;
 }
 
-int HikeTrueRule::setPromptResponseToWM(All_type at, WorkingMemory *wm) {
+int HikeTrueRule::setPromptResponseToWM(All_type       at,
+                                        WorkingMemory *wm) {
   return wm->wmStateAccess(WM_ADD, HIKE_TRUE, at);
 }
 
@@ -530,7 +567,9 @@ bool CampingTrueRule::evaluateAction(WorkingMemory *wm) {
   return false;
 }
 
-int CampingTrueRule::setPromptResponseToWM(All_type at, WorkingMemory *wm) {
+int CampingTrueRule::setPromptResponseToWM(All_type at,
+                                           WorkingMemory *
+                                           wm) {
   return wm->wmStateAccess(WM_ADD, CAMPING_TRUE, at);
 }
 
@@ -545,15 +584,18 @@ CarCampingTrueRule::CarCampingTrueRule() : Rule() {
 
 CarCampingTrueRule::~CarCampingTrueRule() {}
 
-bool CarCampingTrueRule::evaluateAntecendant(WorkingMemory *wm) {
-  return boolStateValue(wm, CAMPING_TRUE);
+bool CarCampingTrueRule::evaluateAntecendant(WorkingMemory *
+                                             wm) {
+  return stateExistsAndTrue(wm, CAMPING_TRUE);
 }
 
 bool CarCampingTrueRule::evaluateAction(WorkingMemory *wm) {
   return false;
 }
 
-int CarCampingTrueRule::setPromptResponseToWM(All_type at, WorkingMemory *wm) {
+int CarCampingTrueRule::setPromptResponseToWM(All_type at,
+                                              WorkingMemory *
+                                              wm) {
   return wm->wmStateAccess(WM_ADD, CAR_CAMPING_TRUE, at);
 }
 
@@ -568,7 +610,8 @@ KayakingTrueRule::KayakingTrueRule() : Rule() {
 
 KayakingTrueRule::~KayakingTrueRule() {}
 
-bool KayakingTrueRule::evaluateAntecendant(WorkingMemory *wm) {
+bool KayakingTrueRule::evaluateAntecendant(WorkingMemory *
+                                           wm) {
   return true;
 }
 
@@ -576,7 +619,9 @@ bool KayakingTrueRule::evaluateAction(WorkingMemory *wm) {
   return false;
 }
 
-int KayakingTrueRule::setPromptResponseToWM(All_type at, WorkingMemory *wm) {
+int KayakingTrueRule::setPromptResponseToWM(All_type at,
+                                            WorkingMemory *
+                                            wm) {
   return wm->wmStateAccess(WM_ADD, KAYAKING_TRUE, at);
 }
 
@@ -591,16 +636,20 @@ KayakingNightTrueRule::KayakingNightTrueRule() : Rule() {
 
 KayakingNightTrueRule::~KayakingNightTrueRule() {}
 
-bool KayakingNightTrueRule::evaluateAntecendant(WorkingMemory *wm) {
-  return boolStateValue(wm, KAYAKING_TRUE);
+bool KayakingNightTrueRule::evaluateAntecendant(WorkingMemory *
+                                                wm) {
+  return stateExistsAndTrue(wm, KAYAKING_TRUE);
 }
 
-bool KayakingNightTrueRule::evaluateAction(WorkingMemory *wm) {
+bool KayakingNightTrueRule::evaluateAction(WorkingMemory *
+                                           wm) {
   return false;
 }
 
-int KayakingNightTrueRule::setPromptResponseToWM(All_type       at,
-                                                 WorkingMemory *wm) {
+int KayakingNightTrueRule::setPromptResponseToWM(All_type
+                                                 at,
+                                                 WorkingMemory
+                                                 *wm) {
   return wm->wmStateAccess(WM_ADD, KAYAKING_NIGHT_TRUE, at);
 }
 
@@ -615,15 +664,18 @@ HikeDistanceRule::HikeDistanceRule() : Rule() {
 
 HikeDistanceRule::~HikeDistanceRule() {}
 
-bool HikeDistanceRule::evaluateAntecendant(WorkingMemory *wm) {
-  return boolStateValue(wm, HIKE_TRUE);
+bool HikeDistanceRule::evaluateAntecendant(WorkingMemory *
+                                           wm) {
+  return stateExistsAndTrue(wm, HIKE_TRUE);
 }
 
 bool HikeDistanceRule::evaluateAction(WorkingMemory *wm) {
   return false;
 }
 
-int HikeDistanceRule::setPromptResponseToWM(All_type at, WorkingMemory *wm) {
+int HikeDistanceRule::setPromptResponseToWM(All_type at,
+                                            WorkingMemory *
+                                            wm) {
   return wm->wmStateAccess(WM_ADD, HIKE_DISTANCE_M, at);
 }
 
@@ -688,7 +740,8 @@ bool AquaTabsRule::evaluateAntecendant(WorkingMemory *wm) {
 }
 
 bool AquaTabsRule::evaluateAction(WorkingMemory *wm) {
-  wm->wmListAccess(WM_ADD, F(AQUATABS), All_type(-1)); // xxx KA
+  wm->wmListAccess(WM_ADD, F(AQUATABS), All_type(-1)); // xxx
+                                                       // KA
   return true;
 }
 
@@ -703,12 +756,15 @@ BasicHikingListRule::BasicHikingListRule() : Rule() {
 
 BasicHikingListRule::~BasicHikingListRule() {}
 
-bool BasicHikingListRule::evaluateAntecendant(WorkingMemory *wm) {
-  return boolStateValue(wm, HIKE_TRUE);
+bool BasicHikingListRule::evaluateAntecendant(WorkingMemory *
+                                              wm) {
+  return stateExistsAndTrue(wm, HIKE_TRUE);
 }
 
 bool BasicHikingListRule::evaluateAction(WorkingMemory *wm) {
-  wm->wmListAccess(WM_ADD, F(BASIC_HIKING_LIST), All_type(-1)); // xxx KA
+  wm->wmListAccess(WM_ADD, F(BASIC_HIKING_LIST), All_type(-1)); //
+                                                                // xxx
+                                                                // KA
   return true;
 }
 
@@ -723,12 +779,15 @@ BasicCampingListRule::BasicCampingListRule() : Rule() {
 
 BasicCampingListRule::~BasicCampingListRule() {}
 
-bool BasicCampingListRule::evaluateAntecendant(WorkingMemory *wm) {
-  return boolStateValue(wm, CAMPING_TRUE);
+bool BasicCampingListRule::evaluateAntecendant(WorkingMemory *
+                                               wm) {
+  return stateExistsAndTrue(wm, CAMPING_TRUE);
 }
 
 bool BasicCampingListRule::evaluateAction(WorkingMemory *wm) {
-  wm->wmListAccess(WM_ADD, F(BASIC_CAMPING_LIST), All_type(-1)); // xxx KA
+  wm->wmListAccess(WM_ADD, F(BASIC_CAMPING_LIST), All_type(-1)); //
+                                                                 // xxx
+                                                                 // KA
   return true;
 }
 
@@ -743,16 +802,21 @@ BasicKayakingListRule::BasicKayakingListRule() : Rule() {
 
 BasicKayakingListRule::~BasicKayakingListRule() {}
 
-bool BasicKayakingListRule::evaluateAntecendant(WorkingMemory *wm) {
-  return boolStateValue(wm, KAYAKING_TRUE);
+bool BasicKayakingListRule::evaluateAntecendant(WorkingMemory *
+                                                wm) {
+  return stateExistsAndTrue(wm, KAYAKING_TRUE);
 }
 
-bool BasicKayakingListRule::evaluateAction(WorkingMemory *wm) {
-  wm->wmListAccess(WM_ADD, F(BASIC_KAYAKING_LIST), All_type(-1)); // xxx KA
+bool BasicKayakingListRule::evaluateAction(WorkingMemory *
+                                           wm) {
+  wm->wmListAccess(WM_ADD, F(BASIC_KAYAKING_LIST), All_type(-1)); //
+                                                                  // xxx
+                                                                  // KA
   return true;
 }
 
-BasicKayakingListNightRule::BasicKayakingListNightRule() : Rule() {
+BasicKayakingListNightRule::BasicKayakingListNightRule() : Rule()
+{
   ruleName     = string("BasicKayakingListNightRule");
   ruleType     = OUTPUT_RULE;
   responseType = TYPE_INVALID;
@@ -763,14 +827,17 @@ BasicKayakingListNightRule::BasicKayakingListNightRule() : Rule() {
 
 BasicKayakingListNightRule::~BasicKayakingListNightRule() {}
 
-bool BasicKayakingListNightRule::evaluateAntecendant(WorkingMemory *wm) {
-  return boolStateValue(wm, KAYAKING_NIGHT_TRUE);
+bool BasicKayakingListNightRule::evaluateAntecendant(
+  WorkingMemory *wm) {
+  return stateExistsAndTrue(wm, KAYAKING_NIGHT_TRUE);
 }
 
-bool BasicKayakingListNightRule::evaluateAction(WorkingMemory *wm) {
+bool BasicKayakingListNightRule::evaluateAction(WorkingMemory *
+                                                wm) {
   // xxx KA
   wm->wmListAccess(WM_ADD, F(
-                     BASIC_KAYAKING_LEGAL_REQUIREMENTS_NIGHT_TIME), All_type(-1));
+                     BASIC_KAYAKING_LEGAL_REQUIREMENTS_NIGHT_TIME),
+                   All_type(-1));
   return true;
 }
 
@@ -785,8 +852,9 @@ BasicCarCampingRule::BasicCarCampingRule() : Rule() {
 
 BasicCarCampingRule::~BasicCarCampingRule() {}
 
-bool BasicCarCampingRule::evaluateAntecendant(WorkingMemory *wm) {
-  return boolStateValue(wm, CAR_CAMPING_TRUE);
+bool BasicCarCampingRule::evaluateAntecendant(WorkingMemory *
+                                              wm) {
+  return stateExistsAndTrue(wm, CAR_CAMPING_TRUE);
 }
 
 bool BasicCarCampingRule::evaluateAction(WorkingMemory *wm) {
@@ -799,6 +867,32 @@ bool BasicCarCampingRule::evaluateAction(WorkingMemory *wm) {
   wm->wmListAccess(WM_ADD, F(AIR_MATTRESS_REPAIR_KIT),
                    All_type(
                      "You can add this non-essential item because you can afford the space."));
+  return true;
+}
+
+NotCarCampingFoodRule::NotCarCampingFoodRule() : Rule() {
+  ruleName     = string("NotCarCampingFoodRule");
+  ruleType     = OUTPUT_RULE;
+  responseType = TYPE_INVALID;
+  setFormat(NO_FORMAT);
+  setPrompt(NO_PROMPT);
+  setProperty(ONE_SHOT, true);
+}
+
+NotCarCampingFoodRule::~NotCarCampingFoodRule() {}
+
+bool NotCarCampingFoodRule::evaluateAntecendant(WorkingMemory *
+                                                wm) {
+  return stateExistsAndTrue(wm,
+                            CAMPING_TRUE) &&
+         stateExistsAndFalse(wm, CAR_CAMPING_TRUE);
+}
+
+bool NotCarCampingFoodRule::evaluateAction(WorkingMemory *
+                                           wm) {
+  wm->wmListAccess(WM_ADD, F(ROPE),
+                   All_type(
+                     "Quantity 2: for raising food in trees."));
   return true;
 }
 
@@ -822,6 +916,7 @@ int KnowledgeBase::initializeRules()
   rules.push_back(new BasicKayakingListRule());
   rules.push_back(new BasicKayakingListNightRule());
   rules.push_back(new BasicCarCampingRule());
+  rules.push_back(new NotCarCampingFoodRule());
 
   return ERROR;
 }

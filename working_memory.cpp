@@ -3,10 +3,14 @@
 #include <fcntl.h>
 #include <unistd.h>
 
+DNAMESPACE();
+
 WorkingMemory::WorkingMemory() {
   // add in sessional information to initialize the working memory
 #define SESSION_DURATION_MINUTES "session duration minutes"
   wmStateAccess(WM_ADD, SESSION_DURATION_MINUTES, All_type(65));
+
+  latex = new Latex();
 }
 
 WorkingMemory::~WorkingMemory() {}
@@ -28,8 +32,8 @@ int WorkingMemory::wmStateAccess(
     // if (wmStateAccess(WM_EXISTS, state, optional_value)) {
     //  return ALREADY_EXISTS;
     // }
-      printf("Adding [%s][%s] to wm.\n", state.c_str(),
-           optional_value.atToString().c_str());
+    D(MEM, "Adding [%s][%s] to wm.\n", state.c_str(),
+      optional_value.atToString().c_str());
     stateTable[state] = optional_value;
     break;
   };
@@ -43,7 +47,7 @@ int WorkingMemory::wmStateAccess(
   };
 
   default: {
-      printf("Default for %s\n", __FUNCTION__);
+    printf("Default for %s\n", __FUNCTION__);
   };
   }
 
@@ -60,14 +64,14 @@ int  WorkingMemory::wmListAccess(
   };
 
   case (WM_ADD): {
-      printf("Adding [%s][%s] to list.\n",
-           frame->getName().c_str(), optional_value.atToString(
-             ).c_str());
+      D(MEM, "Adding [%s][%s] to list.\n",
+      frame->getName().c_str(), optional_value.atToString(
+        ).c_str());
 
     // if the frame is a collection frame, then unpack the collection
     // and add each frame individually
     if (frame->isCollection()) {
-      printf("Frame [%s] is a collection.\n", frame->getName().c_str());
+      D(MEM, "Frame [%s] is a collection.\n", frame->getName().c_str());
 
       vector<Frame> collection = frame->getCollection();
 
@@ -77,7 +81,7 @@ int  WorkingMemory::wmListAccess(
         wmListAccess(WM_ADD, &(*it), All_type(-1));
       }
     } else {
-      packingList.addFrame(*frame);
+      packingList.addFrame(*frame, optional_value);
     }
 
     break;
@@ -155,19 +159,28 @@ int WorkingMemory::printList() {
 }
 
 int WorkingMemory::saveList(string filename) {
+  /*
+     std::ofstream ofs;
+
+     ofs.open(filename.c_str(), std::ofstream::out | std::ofstream::trunc);
+   */
+
+  latex->savePackingList(
+    packingList.getPackingList(), packingList.getPackingListOptional());
+
   int fd = open(
     filename.c_str(),
     O_WRONLY | O_CREAT | O_TRUNC,
     S_IWGRP  | S_IRGRP | S_IRUSR | S_IWUSR);
 
   string list = packingList.returnList();
-
-  char buffer[list.length()];
+  char   buffer[list.length()];
 
   bzero(buffer, list.length());
-
   memcpy(buffer, list.c_str(), list.length());
   write(fd, buffer, strlen(buffer));
   close(fd);
+
+  // ofs.close();
 }
 

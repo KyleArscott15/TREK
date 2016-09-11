@@ -1,26 +1,4 @@
 /*
-   OUTPUT_RULE(ShortsRule, wmStateAccess(WM_GET,
-                   MAX_DAILY_TEMPERATURE_C).i >
-     SHORTS_SUGGESTION_TEMP_THRESHOLD_C, wmListAccess(WM_ADD, F(SHORTS), NULL));
-
-   OUTPUT_RULE(RainRule, wmStateAccess(WM_GET, POP).i >
-     RAIN_GEAR_SUGGESTION_THRESHOLD_PERCENT,
-     wmListAccess(WM_ADD, F(RAIN_PONCHO), F(EXTRA_SOCKS), F(UMBRELLA)));
-
-   INPUT_RULE(SeasonWinterRule,
-     "Will you be out in the winter?\n",
-     TYPE_BOOL,
-     WINTER);
-
-   OUTPUT_RULE(WinterBootsRule, wmStateAccess(WM_GET, WINTER, NULL) == true,
- ||||||||||||||||||||||||||||||||wmListAccess(WM_ADD, f(WINTER_BOOTS), NULL));
-
-   INPUT_RULE(TickRule,
-     wmStateAccess(WM_GET, HIKING_TRUE, NULL) == true,
-     "Will you be going into tick territory?\n",
-     TYPE_BOOL,
-     TICKS);
-
    OUTPUT_RULE(TickNoticeRule, wmStateAccess(WM_GET, TICKS, NULL) == true,
  ||||||||||||||||||||||||||||||||wmListAccess(WM_ADD, N("Be careful of ticks in
  |||||||||||||||||||||||||||||||the
@@ -31,18 +9,7 @@
  |||||||||||||||||||||||||||||||all
  ||||||||||||||||||||||||||||||||times."), NULL));
 
-   OUTPUT_RULE(AnimalRule, wmStateAccess(WM_GET, SOUTHERN_ONTARIO) == true,
- ||||||||||||||||||||||||||||||||wmListAccess(WM_ADD,
- |||||||||||||||||||||||||||||||N(SOUTHER_ONTARIO_ANIMALS_WARNING),
- |||||||||||||||||||||||||||||||true));
-
    // Camping Rules (below)
-
-   OUTPUT_RULE(BedComfortRule, wmStateAccess(WM_GET, CAR_CAMPING, NULL) == true,
- ||||||||||||||||||||||||||||||||)
-     wmListAccess(WM_ADD, GROUND_COVER, "You can add this non-essential item
- ||||||||||||||||||||||||||||||||because you can afford the space."),
-     wmListAccess(WM_ADD, AIR_MATTRESS, AIR_MATTRESS_REPAIR_KIT));
 
    OUTPUT_RULE(NotCarCampingRule,
      wmStateAccess(WM_GET, CAR_CAMPING) == false,
@@ -70,10 +37,4 @@
    PROCESSING_RULE(BoatImplicationRule,
     wmStateAccess(WM_GET, FISHING_BOAT_TRUE) == true,
     wmStateAccess(WM_ADD, BOATING_TRUE, All_type(true)));
-
-   OUTPUT_RULE(TrollingMotorRule,
-     wmStateAccess(WM_GET,
-                   FISHING_TRUE) == true && wmStateAccess(WM_GET,
-                                                          BOATING_TRUE) == true,
-     wmListAccess(WM_ADD, FISH_FINDER, TROLLING_MOTOR));
  */

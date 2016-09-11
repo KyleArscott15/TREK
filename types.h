@@ -38,23 +38,23 @@ public:
   ~All_type() {}
 
   string atToString() {
-    string s;
+    string str;
 
     if (getType() == TYPE_BOOL) {
       if (b) {
-        s = string("true");
+        str = string("true");
       } else {
-        s = string("false");
+        str = string("false");
       }
     } else if (getType()  == TYPE_STRING) {
-      s = string(s);
+      str = string(s);
     } else if (getType()  == TYPE_INTEGER) {
-      s = string(to_string(i));
+      str = string(to_string(i));
     } else {
-      s = string("null");
+      str = string("null");
     }
 
-    return s;
+    return str;
   }
 
   friend ostream& operator<<(ostream       & os,

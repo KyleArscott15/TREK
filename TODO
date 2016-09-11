@@ -1,0 +1,58 @@
+TREK Todo
+
+1. "ls" should not work when typing in commands.
+2. Segfault when type in "ls" when it says "use a built in command"
+-the "notice" info with the car camping air mattress should be displayed on the final packing list
+-rope will not show its message, if you say you are not car camping
+-why does it let you answer questions with "enter?"
+-seg fault on enter on last question
+3. debug log tokens should work dynamically checked from the /running directory
+4. Abstract all of the knowledge base rules to remove all warnings from compilation
+5. Create interfaces for rules. Rule specification language
+6. function to store and list built in commands and their functions to the user, on the shell.
+7. clear up final packing list by outputting text to a nice latex document template
+
+/* NOTES
+
+   Strategies:
+   1. Before code is submitted it is run through standard test cases
+   2. TODO Code is unit tested using CPPUnit.
+   3. A continuous integration strategy is implemented in integrate.sh, which
+      follows the following steps
+   compile from scratch -> analyze code for taboos (magic numbers etc) -> static
+      code analyzers (ex. buffer overflow) -> unit test cases -> format code ->
+      commit code
+   4. Code can be compiled for either -DDEBUG or -DRELEASE. Development should
+      be done using -DDEBUG.
+   5. Code should be a 1:1 mapping between functional requirements and
+      implementation. References to external documentation should be made within
+      the code
+
+   Tactics:
+   1. Do not use "assert" in your code.
+   2. Use "static_assert" where you can.
+   3. TODO A high-level exception catcher in main() should deal with all
+      uncaught exceptions, instead of termination (unless that's the right thing
+      to do)
+   4. TODO Mission-critical processesare run with a
+      "manager process" that will respawn the main process if it dies. It is
+      also responsible for reporting/logging issues.
+   5. Optimizations: functions that are small should use "inline"
+   6. Functions not throwing exceptions should make use of the qualifier
+      "noexcept"
+   7. TODO return types of all functions implemented in this source should
+      return an enum type that is very descriptive of the error/success type. Do
+      this instead of returning an int and wondering if "1" is success or
+      failure
+   8. Make use of the D* macros defined in this file to do code traces,
+      stack traces or print variable values. They only work when -DDEBUG is used
+      in CMakeLists.txt.
+   9. Interrupt-style code is favourable over polling code. ex. must refresh
+      image after processing on the last one is done instead of looping
+      continously and going out of sync
+   10. TODO there should be one memory allocation function in the entire src/,
+      so that it is easy to quantify and trace memory leaks
+   11. Syslog will track system errors (if we decide to use a unix-based
+      platform)
+
+ */

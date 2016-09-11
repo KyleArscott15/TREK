@@ -3,6 +3,8 @@
 
 #include "state.h"
 #include "frame.h"
+#include "top_level_inclusions.h"
+#include "latex.h"
 
 enum WORKING_MEMORY_SECTION {
   WM_STATE          = 1,
@@ -49,7 +51,7 @@ public:
 
   ~PackingList() {}
 
-  int addFrame(Frame frame) {
+  int addFrame(Frame frame, All_type optional_value) {
     string frame_name = frame.getName();
 
     if (packingList.count(frame_name) > 0) {
@@ -57,6 +59,9 @@ public:
     }
 
     packingList[frame_name] = frame;
+
+    // printf("ABOUT TO ADD: [%s]\n", optional_value.s.c_str()); // xxx KA
+    packingListOptional[frame_name] = optional_value;
     return SUCCESS;
   }
 
@@ -85,9 +90,9 @@ public:
     for (map<string, Frame>::iterator it = packingList.begin();
          it != packingList.end();
          ++it) {
-      list += it->first;
-      list += string(" => ");
       list += it->second.getName();
+      list += string(" => ");
+      list += packingListOptional[it->first].atToString();
       list += string("\n");
     }
 
@@ -120,9 +125,19 @@ public:
     return SUCCESS;
   }
 
+  map<string, Frame>getPackingList() {
+    return packingList;
+  }
+
+  map<string, All_type>getPackingListOptional() {
+    return packingListOptional;
+  }
+
 private:
 
-  map<string, Frame> packingList; // string key is the frame_name of
+  map<string, Frame>    packingList; // string key is the frame_name of
+  map<string, All_type> packingListOptional;
+
   // the frame it stores, used a map
   // for fast "existence" queries
 };
@@ -158,6 +173,8 @@ private:
   StateTable  stateTable;
   HistoryList promptHistory;
   PackingList packingList;
+
+  Latex *latex;
 };
 
 #endif // ifndef WORKING_MEMORY_H
