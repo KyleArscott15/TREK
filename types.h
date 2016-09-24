@@ -30,9 +30,9 @@ public:
     i    = value;
   }
 
-  All_type(char *str) {
+  All_type(string str) {
     type = TYPE_STRING;
-    s    = string(str);
+    s    = str;
   }
 
   ~All_type() {}
@@ -81,7 +81,7 @@ inline ostream& operator<<(ostream& out, const All_type& at) {
   } else if (at.type == TYPE_INTEGER) {
     out << at.i;
   } else {
-    out << "null";
+    out << string("null");
   }
   return out;
 }

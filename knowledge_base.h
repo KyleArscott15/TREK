@@ -152,9 +152,7 @@ public:
     return ruleType;
   }
 
-  int setPrompt(char *input_prompt);
   int setPrompt(string input_prompt);
-  int setFormat(char *input_format);
   int setFormat(string input_format);
 
 protected:

@@ -46,19 +46,9 @@ bool Rule::stateExistsAndFalse(WorkingMemory *wm, string state) {
   return stateExists(wm, state) && stateIsBool(wm, state) && stateFalse(wm, state);
 }
 
-int Rule::setPrompt(char *input_prompt)
-{
-  prompt = string(input_prompt);
-}
-
 int Rule::setPrompt(string input_prompt)
 {
   prompt = input_prompt;
-}
-
-int Rule::setFormat(char *input_format)
-{
-  format = string(input_format);
 }
 
 int Rule::setFormat(string input_format)
@@ -545,7 +535,7 @@ HikeTrueRule::HikeTrueRule() : Rule() {
   ruleName     = string("HikeTrueRule");
   ruleType     = INPUT_RULE;
   responseType = TYPE_BOOL;
-  setFormat("%s\n");
+  setFormat(string("%s\n").c_str()); // xxx KA this works
   setPrompt("Are you hiking?");
   setProperty(ONE_SHOT, true);
 }
