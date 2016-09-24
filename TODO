@@ -1,5 +1,6 @@
 TREK Todo
 
+3. Create notes for each item and a way to specify quantity
 4. Abstract all of the knowledge base rules to remove all warnings from compilation
 5. Create interfaces for rules. Rule specification language
 8. Save prompt history and allow user to print that out on the second page so they know the rational for asking for certian items.

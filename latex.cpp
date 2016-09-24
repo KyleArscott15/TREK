@@ -52,7 +52,7 @@ int Latex::savePackingList(map<string,
 	\\noindent \n \
 	\\section{Packing List Items} \n \
 	\\FloatBarrier \n \
-	\\begin{longtable}{|p{2in}|p{1in}|p{4in}|} \\hline \n \
+	\\begin{longtable}{|p{1.5in}|p{0.75in}|p{4.75in}|} \\hline \n \
 		\\textbf{Item} & \\textbf{Quantity} & \\textbf{Notes about Item} \\ \\hline  \n");
 
   string latexMiddle = string(
@@ -86,8 +86,11 @@ int Latex::savePackingList(map<string,
     // \\hline  \n"
     string line = string("");
     line += it->second.getName();
-    line += string("& & ");
-    line += optional[it->first].atToString();
+    line += string(" & ");
+    line += string("99999");          // itoa(it->second.getQuantity());
+    printf("The Quantity is [%d]\n", it->second.getQuantity());
+    line += string(" & ");
+    line += it->second.getUserNote(); // optional[it->first].atToString();
     line += string(" \\ \\hline \n");
 
     latexAll += line;
@@ -111,7 +114,7 @@ int Latex::savePackingList(map<string,
     O_WRONLY | O_CREAT | O_TRUNC,
     S_IWGRP  | S_IRGRP | S_IRUSR | S_IWUSR);
 
-#define EXTRA_PADDING (10) // xxx KA this is a fuck up, we shouldn't need this
+#define EXTRA_PADDING (10)
   char buffer[latexAll.length() + EXTRA_PADDING];
 
   bzero(buffer, latexAll.length() + EXTRA_PADDING);

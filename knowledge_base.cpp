@@ -216,36 +216,136 @@ map<string, Frame>KnowledgeBase::initializeFrames()
   ;
 
   boots.setName(BOOTS);
-  All_type shoe_size(13);
-  boots.addSlot((char *)"shoe size", (char *)"US", shoe_size);
+  boots.setUserNotes("High-cut, lots of toe room.");
 
   basicCampingList.setName(BASIC_CAMPING_LIST);
+
   aquatabs.setName(AQUATABS);
+  aquatabs.setQuantity(12);
+  aquatabs.setUserNotes("Follow directions on packaging.");
+
   tent.setName(TENT);
+  tent.setUserNotes(
+    "Useful knots: bowline (connect the top of the tent to a tree), alpine loop (shorten a rope), blood loop (adding extra loops to the line for hanging things from a caribiner)");
+
   tarp.setName(TARP);
+  tarp.setUserNotes(
+    "Bring bungee cords and make sure the tarp does not touch any part of the tent because in the morning condensation forms and may leak into the tent. Useful Knots: bowline");
+
   sleepingBag.setName(SLEEPING_BAG);
+
   sleepingPad.setName(SLEEPING_PAD);
+  sleepingPad.setUserNotes(
+    "Inflatable pads compensate for uneven terrian better than foam pads, and are more compact.");
+
   pillow.setName(PILLOW);
+
   dryBags.setName(DRY_BAGS);
+  dryBags.setQuantity(3);
+  dryBags.setUserNotes(
+    "Make sure to roll them at least 3 times before closing. Make sure to keep enough air inside of the bag so that the whole bag will float.");
+
   stove.setName(COLEMAN_STOVE);
+  stove.setUserNotes(
+    "Some stoves have flaps to prevent wind from redirecting the flame.");
+
   rope.setName(ROPE);
+  rope.setQuantity(2);
+  rope.setUserNotes(
+    "Use two different rope materials, one slippery to the touch, the other one rough. This helps you make different kinds of knots.");
+
   potsAndPans.setName(POTS_AND_PANS);
+
   cookware.setName(COOKWARE);
+  cookware.setUserNotes(
+    "Small plastic utensils are more appropriate for hiking than metal ones.");
+
   saw.setName(SAW);
+
   knife.setName(KNIFE);
+
   emergencyKit.setName(EMERGENCY_KIT);
+  emergencyKit.setUserNotes("Warmth blanket (made of foil), flares, whistle.");
+
   firstAidKit.setName(FIRST_AID_KIT);
+  firstAidKit.setUserNotes(
+    "Waterproof band-aids, disinfectant, polysporin, scissors.");
+
   lighter.setName(LIGHTER);
+  lighter.setQuantity(2);
+  lighter.setUserNotes(
+    "Make sure it is refilled before a trip. \"Windproof\" lighters (aka. torch lighters) have a blue jet flame that burns hotter than red");
+
   flashlight.setName(FLASHLIGHT);
+  flashlight.setQuantity(2);
+  flashlight.setUserNotes("A waterproof flashlight is a good idea.");
+
   toiletries.setName(TOILETRIES);
+  toiletries.setUserNotes(
+    "Tooth brush, tooth paste, floss, nail clippers (you may chip it during a fall)");
+
   tylenol.setName(TYLENOL);
+  tylenol.setQuantity(10);
+
   campSoap.setName(CAMP_SOAP);
+  campSoap.setUserNotes(
+    "Camp soap is only biodegradeable on land. Do not use directly in a body of water. Read the label.");
+
   garbageBags.setName(GARBAGE_BAGS);
+  garbageBags.setQuantity(10);
+  garbageBags.setUserNotes(
+    "Resealable bags are a good idea. Bring many garbage bags because you end up using them for other purposes, like waterproofing things.");
+
   foodBarrel.setName(FOOD_BARREL);
+
   rainWare.setName(RAIN_WARE);
+
   extraSocks.setName(EXTRA_SOCKS);
+  extraSocks.setQuantity(2);
   dryFitShirt.setName(DRY_FIT_SHIRT);
+  dryFitShirt.setQuantity(2);
   dryFitShorts.setName(DRY_FIT_SHORTS);
+  dryFitShorts.setQuantity(2);
+
+  groundCover.setName(GROUND_COVER);
+  groundCover.setUserNotes(
+    "Put a ground cover under the tent to prevent condensation from the ground.");
+
+  airMattress.setName(AIR_MATTRESS);
+
+  airMattressRepairKit.setName(AIR_MATTRESS_REPAIR_KIT);
+  airMattressRepairKit.setUserNotes("You're not a thin as you think.");
+
+  basicHikingList.setName(BASIC_HIKING_LIST);
+  boots.setName(BOOTS);
+
+  hikingPants.setName(HIKING_PANTS);
+  hikingPants.setUserNotes(
+    "Pants while hiking prevents ticks from biting you and giving you Lyme Disease");
+
+  sunscreen.setName(SUNSCREEN);
+  sunscreen.setUserNotes(
+    "Higher SPF is more protection, but is it also more cancer?");
+
+  hikingMap.setName(HIKING_MAP);
+
+  sunGlasses.setName(SUN_GLASSES);
+  sunGlasses.setUserNotes(
+    "Polarized lenses cut down on glare, so you can see fish underwater better.");
+
+  bugSpray.setName(BUG_SPRAY);
+  bugSpray.setUserNotes(
+    "Higher the deet content, the more effective it is. Warning: bugspray is inneffective against the rodent-size mosquitoes of the French River.");
+
+  compass.setName(COMPASS);
+
+  waterBottle.setName(WATER_BOTTLE);
+  waterBottle.setUserNotes(
+    "Choose a hard-shell water bottle: it can be used for different purposess, including a container for something fragile.");
+
+  backpack.setName(BACKPACK);
+  backpack.setUserNotes(
+    "Backpacks are rated in Litres, for the volume of gear they hold.");
 
   vector<Frame> bcl;
   bcl.push_back(aquatabs);
@@ -275,21 +375,6 @@ map<string, Frame>KnowledgeBase::initializeFrames()
   bcl.push_back(dryFitShirt);
   bcl.push_back(dryFitShorts);
   basicCampingList.setCollection(bcl);
-
-  groundCover.setName(GROUND_COVER);
-  airMattress.setName(AIR_MATTRESS);
-  airMattressRepairKit.setName(AIR_MATTRESS_REPAIR_KIT);
-
-  basicHikingList.setName(BASIC_HIKING_LIST);
-  boots.setName(BOOTS);
-  hikingPants.setName(HIKING_PANTS);
-  sunscreen.setName(SUNSCREEN);
-  hikingMap.setName(HIKING_MAP);
-  sunGlasses.setName(SUN_GLASSES);
-  bugSpray.setName(BUG_SPRAY);
-  compass.setName(COMPASS);
-  waterBottle.setName(WATER_BOTTLE);
-  backpack.setName(BACKPACK);
 
   vector<Frame> bhl;
   bhl.push_back(boots);
@@ -535,7 +620,7 @@ HikeTrueRule::HikeTrueRule() : Rule() {
   ruleName     = string("HikeTrueRule");
   ruleType     = INPUT_RULE;
   responseType = TYPE_BOOL;
-  setFormat(string("%s\n").c_str()); // xxx KA this works
+  setFormat("%s\n");
   setPrompt("Are you hiking?");
   setProperty(ONE_SHOT, true);
 }
@@ -713,7 +798,7 @@ bool BootsRule::evaluateAntecendant(WorkingMemory *wm) {
 }
 
 bool BootsRule::evaluateAction(WorkingMemory *wm) {
-  wm->wmListAccess(WM_ADD, F(BOOTS), All_type(-1)); // xxx KA
+  wm->wmListAccess(WM_ADD, F(BOOTS), All_type(-1));
   return true;
 }
 
@@ -747,8 +832,9 @@ bool AquaTabsRule::evaluateAntecendant(WorkingMemory *wm) {
 }
 
 bool AquaTabsRule::evaluateAction(WorkingMemory *wm) {
-  wm->wmListAccess(WM_ADD, F(AQUATABS), All_type(-1)); // xxx
-                                                       // KA
+  wm->wmListAccess(WM_ADD, F(AQUATABS),
+                   All_type(
+                     "AquaTabs are a very tasty treat, when taken in Quantity of 100"));
   return true;
 }
 
@@ -769,9 +855,8 @@ bool BasicHikingListRule::evaluateAntecendant(WorkingMemory *
 }
 
 bool BasicHikingListRule::evaluateAction(WorkingMemory *wm) {
-  string ticks = string("ticks are bad");
-
-  wm->wmNoteAccess(WM_ADD, ticks, All_type(-1));
+  wm->wmNoteAccess(WM_ADD, string(
+                     "Cover up skin and watch out for ticks!"), All_type(-1));
   wm->wmListAccess(WM_ADD, F(BASIC_HIKING_LIST), All_type(-1));
   return true;
 }
@@ -793,10 +878,7 @@ bool BasicCampingListRule::evaluateAntecendant(WorkingMemory *
 }
 
 bool BasicCampingListRule::evaluateAction(WorkingMemory *wm) {
-  wm->wmListAccess(WM_ADD, F(BASIC_CAMPING_LIST), All_type(-1)); // because a
-                                                                 // basic
-                                                                 // camping list
-                                                                 // is
+  wm->wmListAccess(WM_ADD, F(BASIC_CAMPING_LIST), All_type(-1));
   return true;
 }
 
@@ -818,9 +900,7 @@ bool BasicKayakingListRule::evaluateAntecendant(WorkingMemory *
 
 bool BasicKayakingListRule::evaluateAction(WorkingMemory *
                                            wm) {
-  wm->wmListAccess(WM_ADD, F(BASIC_KAYAKING_LIST), All_type(-1)); //
-                                                                  // xxx
-                                                                  // KA
+  wm->wmListAccess(WM_ADD, F(BASIC_KAYAKING_LIST), All_type(-1));
   return true;
 }
 
@@ -843,7 +923,6 @@ bool BasicKayakingListNightRule::evaluateAntecendant(
 
 bool BasicKayakingListNightRule::evaluateAction(WorkingMemory *
                                                 wm) {
-  // xxx KA
   wm->wmListAccess(WM_ADD, F(
                      BASIC_KAYAKING_LEGAL_REQUIREMENTS_NIGHT_TIME),
                    All_type(-1));

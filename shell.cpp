@@ -25,7 +25,8 @@ int Shell::endConsultation() {
   printf("Ending consultation...\n");
   HLINE();
   wm->saveList(PACKING_LIST_FILENAME);
-  exit(0);
+  _exit(0); // xxx KA using _exit instead of exit to remove warning, but we may
+            // want to reintroduce later if we deal with signals
 }
 
 int Shell::usage() {

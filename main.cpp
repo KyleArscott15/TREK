@@ -15,7 +15,7 @@ int main() {
   KnowledgeBase   kb;
   InferenceEngine ie(&kb);
 
-  DPRINT("Hello DARLING.\n"); // xxx KA
+  DPRINT("Debug Output is on and functional.\n");
 
   Shell sh(&ui, &wm, &ie);
 

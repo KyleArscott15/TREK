@@ -76,14 +76,44 @@ public:
   friend ostream& operator<<(ostream    & os,
                              const Frame& frame);
 
+  string          getUserNote() {
+    return userNotesAboutFrame;
+  }
+
+  uint getQuantity() {
+    return quantity;
+  }
+
+  bool setUserNotes(string notes);
+
+  uint setQuantity(uint newQuantity) {
+    int ret = quantity;
+
+    quantity = newQuantity;
+    return ret;
+  }
+
 private:
 
   // true if this frame is actually a grouping of other frames
   bool collectionFrame;
   vector<Frame> collection;
 
-  vector<Slot> slots;
-  string name;
+  vector<Slot> slots;         // call-back functions to perform calculations
+  string name;                // same string as the index into the frames map to
+                              // retrieve this frame
+  string userNotesAboutFrame; // merely pasted into final packing list for user
+                              // information
+  uint quantity;              // number of items to bring. ex. bring 2
+                              // waterbottles for 2 people
+  uint massInGrams;           // used for weight calculation for hiking
+  uint volumeInLitres;        // used for determining how much you can pack into
+                              // your kayak or backpack
+  int sizeInt;                // generic number, depends on units in sizeUnits.
+                              // ex. sizeInt = 13, sizeUnits = US mens shoe size
+  string sizeIntUnits;        // paired with sizeInt to give supporting
+                              // information
+  string sizeString;          // generic string, ex. a shirt can be XXL
 };
 
 inline ostream& operator<<(ostream& out, const Frame& frame) {

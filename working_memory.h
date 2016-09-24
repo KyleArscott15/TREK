@@ -21,11 +21,9 @@ enum WORKING_MEMORY_ACTION {
 };
 
 // WM specific types
-typedef map<string, All_type>StateTable; // XXX KA don't make it a pointer,
-                                         // just a normal. Just plain values
-                                         // in working memory. Version 1 has
-                                         // All_type, version 2 has State
-                                         // object
+typedef map<string, All_type>StateTable; // TODO version two should have a State
+                                         // object, not an All_type object
+
 class PromptHistory;
 typedef vector<PromptHistory *>HistoryList;
 
@@ -60,7 +58,6 @@ public:
 
     packingList[frame_name] = frame;
 
-    // printf("ABOUT TO ADD: [%s]\n", optional_value.s.c_str()); // xxx KA
     packingListOptional[frame_name] = optional_value;
     return SUCCESS;
   }
@@ -151,9 +148,7 @@ public:
 
   string addNote(const string& note, All_type optionalValue) {
     notes.push_back(note);
-    return note; // xxx KA Learning Opportunity: if you specify a return value
-                 // of a string, but don't return one then the compiler does not
-                 // make the build fail and you get a segfault
+    return note;
   }
 
   vector<string>getNotes() {

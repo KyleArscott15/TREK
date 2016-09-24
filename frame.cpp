@@ -2,6 +2,8 @@
 
 Frame::Frame() {
   collectionFrame = false;
+  setQuantity(1);
+  setUserNotes("");
 }
 
 Frame::~Frame() {}
@@ -24,5 +26,10 @@ int Frame::addSlot(char *slot_name, char *unit, All_type default_val) {
   Slot slot(slot_name, unit, default_val);
 
   slots.push_back(slot);
+}
+
+bool Frame::setUserNotes(string notes) {
+  userNotesAboutFrame = notes;
+  return true;
 }
 
