@@ -1,16 +1,10 @@
 TREK Todo
 
-1. "ls" should not work when typing in commands.
-2. Segfault when type in "ls" when it says "use a built in command"
--the "notice" info with the car camping air mattress should be displayed on the final packing list
--rope will not show its message, if you say you are not car camping
--why does it let you answer questions with "enter?"
--seg fault on enter on last question
-3. debug log tokens should work dynamically checked from the /running directory
 4. Abstract all of the knowledge base rules to remove all warnings from compilation
 5. Create interfaces for rules. Rule specification language
-6. function to store and list built in commands and their functions to the user, on the shell.
-7. clear up final packing list by outputting text to a nice latex document template
+8. Save prompt history and allow user to print that out on the second page so they know the rational for asking for certian items.
+
+Frames to add: gloves, charts and maps, air lounge, barrels, spray skirt, binoculars, tin foil, butter oil, trowel,  synthetic pants, clothelines, book of knots, 
 
 /* NOTES
 

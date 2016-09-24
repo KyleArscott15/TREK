@@ -9,8 +9,6 @@ WorkingMemory::WorkingMemory() {
   // add in sessional information to initialize the working memory
 #define SESSION_DURATION_MINUTES "session duration minutes"
   wmStateAccess(WM_ADD, SESSION_DURATION_MINUTES, All_type(65));
-
-  latex = new Latex();
 }
 
 WorkingMemory::~WorkingMemory() {}
@@ -18,7 +16,7 @@ WorkingMemory::~WorkingMemory() {}
 int WorkingMemory::wmStateAccess(
   WORKING_MEMORY_ACTION action,
   string                state,
-  All_type              optional_value) {
+  All_type              optionalValue) {
   switch (action) {
   case (WM_EXISTS): {
     if (stateTable.count(state) > 0) {
@@ -29,12 +27,12 @@ int WorkingMemory::wmStateAccess(
   };
 
   case (WM_ADD): {
-    // if (wmStateAccess(WM_EXISTS, state, optional_value)) {
+    // if (wmStateAccess(WM_EXISTS, state, optionalValue)) {
     //  return ALREADY_EXISTS;
     // }
     D(MEM, "Adding [%s][%s] to wm.\n", state.c_str(),
-      optional_value.atToString().c_str());
-    stateTable[state] = optional_value;
+      optionalValue.atToString().c_str());
+    stateTable[state] = optionalValue;
     break;
   };
 
@@ -57,7 +55,7 @@ int WorkingMemory::wmStateAccess(
 int  WorkingMemory::wmListAccess(
   WORKING_MEMORY_ACTION action,
   Frame                *frame,
-  All_type              optional_value) {
+  All_type              optionalValue) {
   switch (action) {
   case (WM_EXISTS): {
     break;
@@ -65,7 +63,7 @@ int  WorkingMemory::wmListAccess(
 
   case (WM_ADD): {
       D(MEM, "Adding [%s][%s] to list.\n",
-      frame->getName().c_str(), optional_value.atToString(
+      frame->getName().c_str(), optionalValue.atToString(
         ).c_str());
 
     // if the frame is a collection frame, then unpack the collection
@@ -81,9 +79,47 @@ int  WorkingMemory::wmListAccess(
         wmListAccess(WM_ADD, &(*it), All_type(-1));
       }
     } else {
-      packingList.addFrame(*frame, optional_value);
+      packingList.addFrame(*frame, optionalValue);
     }
 
+    break;
+  };
+
+  case (WM_REMOVE): {
+    break;
+  };
+
+  case (WM_GET): {
+    break;
+  };
+
+  case (WM_SET): {
+    break;
+  };
+
+  default: {
+    printf("Default for %s\n", __FUNCTION__);
+  };
+  }
+
+  return SUCCESS;
+}
+
+int  WorkingMemory::wmNoteAccess(
+  WORKING_MEMORY_ACTION action,
+  const string        & note,
+  All_type              optionalValue) {
+  switch (action) {
+  case (WM_EXISTS): {
+    break;
+  };
+
+  case (WM_ADD): {
+    D(MEM, "Adding [%s][%s] to notes.\n",
+      note.c_str(), optionalValue.atToString(
+        ).c_str());
+
+    listNotes.addNote(note, optionalValue);
     break;
   };
 
@@ -165,8 +201,9 @@ int WorkingMemory::saveList(string filename) {
      ofs.open(filename.c_str(), std::ofstream::out | std::ofstream::trunc);
    */
 
-  latex->savePackingList(
-    packingList.getPackingList(), packingList.getPackingListOptional());
+  latex.savePackingList(
+    packingList.getPackingList(),
+    packingList.getPackingListOptional(), listNotes.getNotes());
 
   int fd = open(
     filename.c_str(),

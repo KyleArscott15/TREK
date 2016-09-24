@@ -50,15 +50,17 @@ public:
 
   KnowledgeBase();
   ~KnowledgeBase();
-  static map<string, Frame> frames;
+  static map<string, Frame>  frames;
+  static map<string, string> notes;
   vector<Rule *>contendingRules(WorkingMemory *wm);
 
 protected:
 
 private:
 
-  static map<string, Frame>initializeFrames();
-  int                      initializeRules();
+  static map<string, Frame> initializeFrames();
+  static map<string, string>initializeNotes();
+  int                       initializeRules();
 
   vector<Rule *> rules;
 };
@@ -222,6 +224,7 @@ OUTPUT_RULE_DEFINE(NotCarCampingFoodRule);
 
 // Ways to access WM
 #define F(item) (&KnowledgeBase::frames[item])
+#define N(note) (&KnowledgeBase::notes[note])
 
 // states
 // string is used internally to differentiate states

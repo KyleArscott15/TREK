@@ -22,7 +22,8 @@ public:
         WorkingMemory   *working_memory,
         InferenceEngine *inference_engine);
   ~Shell();
-  void run();
+  void   run();
+  string getBuiltInCommands();
 
 protected:
 

@@ -29,9 +29,10 @@ int Shell::endConsultation() {
 }
 
 int Shell::usage() {
-  printf("\n");
-  printf("Run with no arguments.\n");
-  printf("Built-in commands can be used at any time:\n");
+         printf("\n");
+         printf("Run with no arguments.\n");
+         printf("Built-in commands can be used at any time: [%s]\n",
+         getBuiltInCommands().c_str());
 }
 
 int Shell::help() {
@@ -47,6 +48,32 @@ int Shell::wmContents() {
 int Shell::printList() {
   wm->printList();
   return SUCCESS;
+}
+
+string Shell::getBuiltInCommands() {
+  string commands;
+
+  commands += string(DOC);
+  commands += string(", ");
+  commands += string(EXIT);
+  commands += string(", ");
+  commands += string(HELP);
+  commands += string(", ");
+  commands += string(WM_CONTENTS);
+  commands += string(", ");
+  commands += string(PRINT_LIST);
+
+  /*
+     xxx KA TODO
+     for (map<string, Frame>::iterator it = builtInCommands.begin();
+         it != builtInCommands.end();
+     ++it) {
+      commands += it->first;
+      commands += string(", ");
+     }
+   */
+
+  return commands;
 }
 
 int Shell::recognizeBuiltIn(string response) {
@@ -114,7 +141,7 @@ void Shell::run() {
 
     if (ie->inferNextRule(&rule, wm) < SUCCESS) {
       printf("No rule is true.\n");
-      ui->issueBuiltInPrompt(response);
+      ui->issueBuiltInPrompt(response, getBuiltInCommands());
 
       // endConsultation();
       // goto end_of_loop;

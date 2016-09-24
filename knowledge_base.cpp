@@ -75,7 +75,8 @@ KnowledgeBase::~KnowledgeBase()
 {}
 
 map<string,
-    Frame>KnowledgeBase:: frames = KnowledgeBase::initializeFrames();
+    Frame>KnowledgeBase:: frames         = KnowledgeBase::initializeFrames();
+map<string, string>KnowledgeBase:: notes = KnowledgeBase::initializeNotes();
 
 // Frame references
 
@@ -431,6 +432,22 @@ map<string, Frame>KnowledgeBase::initializeFrames()
   return frames;
 }
 
+// Note references
+#define TICKS string("Tick Warning")
+
+map<string, string>KnowledgeBase::initializeNotes()
+{
+  map<string, string> n;
+
+  n[TICKS] = string(
+    "Wear pants when walking through the forest. \
+    Ticks leave a red and white target when they bite, \
+    but and they may be carrying Lime disease. If bitten, \
+    you might not get a noticeable bite mark, but still could get infected.");
+
+  return n;
+}
+
 vector<Rule *>KnowledgeBase::contendingRules(WorkingMemory *wm)
 {
   // subset of all rules, all which are if(true).
@@ -762,9 +779,10 @@ bool BasicHikingListRule::evaluateAntecendant(WorkingMemory *
 }
 
 bool BasicHikingListRule::evaluateAction(WorkingMemory *wm) {
-  wm->wmListAccess(WM_ADD, F(BASIC_HIKING_LIST), All_type(-1)); //
-                                                                // xxx
-                                                                // KA
+  string ticks = string("ticks are bad");
+
+  wm->wmNoteAccess(WM_ADD, ticks, All_type(-1));
+  wm->wmListAccess(WM_ADD, F(BASIC_HIKING_LIST), All_type(-1));
   return true;
 }
 
@@ -785,9 +803,10 @@ bool BasicCampingListRule::evaluateAntecendant(WorkingMemory *
 }
 
 bool BasicCampingListRule::evaluateAction(WorkingMemory *wm) {
-  wm->wmListAccess(WM_ADD, F(BASIC_CAMPING_LIST), All_type(-1)); //
-                                                                 // xxx
-                                                                 // KA
+  wm->wmListAccess(WM_ADD, F(BASIC_CAMPING_LIST), All_type(-1)); // because a
+                                                                 // basic
+                                                                 // camping list
+                                                                 // is
   return true;
 }
 

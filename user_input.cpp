@@ -14,9 +14,9 @@ int UserInput::issuePrompt(Rule *rule, string& response) {
   return SUCCESS;
 }
 
-int UserInput::issueBuiltInPrompt(string& response) {
+int UserInput::issueBuiltInPrompt(string& response, string builtInCommands) {
   // issue the prompt to the console
-  printf("%s %s\n", "Use any builtin command:", "::");
+  printf("Use any builtin command: [%s]", builtInCommands.c_str());
 
   // get the user response
   getline(cin, response);

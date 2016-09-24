@@ -6,7 +6,9 @@ Latex::Latex() {}
 Latex::~Latex() {}
 
 int Latex::savePackingList(map<string,
-                               Frame>list, map<string, All_type>optional) {
+                               Frame>list,
+                           map<string, All_type>optional,
+                           vector<string>notes) {
   /*
    # replace all references to COMPANY to the one provided
      sed -i.bak s/$magicword_company/"$COMPANY"/g $resume_name$ext
@@ -68,9 +70,10 @@ int Latex::savePackingList(map<string,
 		the present or absence of errors, whether or not discoverable, all to \n \
 		the greatest extent permissible under applicable law. \n ");
 
-  string latexEnd = string(" \
+  string latexEnd = string(
+    " \
 	\\end{enumerate} \n \
-	\n \
+	\n \n\
 	\\end{document} \n ");
 
   // construct the latex document
@@ -90,6 +93,14 @@ int Latex::savePackingList(map<string,
     latexAll += line;
   }
   latexAll += latexMiddle;
+
+  for (vector<string>::iterator it = notes.begin();
+       it != notes.end();
+       ++it) {
+    latexAll += string("\\item ");
+    latexAll += *it;
+    latexAll += string(" \\ \\hline \n");
+  }
   latexAll += latexEnd;
 
 

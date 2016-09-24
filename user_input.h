@@ -13,7 +13,8 @@ public:
 
   int      issuePrompt(Rule   *rule,
                        string& response);
-  int      issueBuiltInPrompt(string& response);
+  int      issueBuiltInPrompt(string& response,
+                              string  builtInCommands);
   All_type parseResposeForRule(Rule  *rule,
                                string response);
   string   userOptions(TYPE promptType);

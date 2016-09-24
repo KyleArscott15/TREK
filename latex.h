@@ -13,7 +13,8 @@ public:
   ~Latex();
   int savePackingList(map<string,
                           Frame>list,
-                      map<string, All_type>optional);
+                      map<string, All_type>optional,
+                      vector<string>notes);
 
 protected:
 

@@ -142,6 +142,44 @@ private:
   // for fast "existence" queries
 };
 
+class ListNotes {
+public:
+
+  ListNotes() {}
+
+  ~ListNotes() {}
+
+  string addNote(const string& note, All_type optionalValue) {
+    notes.push_back(note);
+    return note; // xxx KA Learning Opportunity: if you specify a return value
+                 // of a string, but don't return one then the compiler does not
+                 // make the build fail and you get a segfault
+  }
+
+  vector<string>getNotes() {
+    return notes;
+  }
+
+  string getNotesString() {
+    int count = 0;
+    string noteString;
+
+    for (vector<string>::iterator it = notes.begin();
+         it != notes.end();
+         ++it, count++) {
+      noteString += string(to_string(count));
+      noteString += string(". ");
+      noteString += *it;
+      noteString += "\n";
+    }
+    return noteString;
+  }
+
+private:
+
+  vector<string> notes;
+};
+
 class WorkingMemory {
 public:
 
@@ -153,12 +191,17 @@ public:
   int wmStateAccess(
     WORKING_MEMORY_ACTION action,
     string                state,
-    All_type              optional_value);
+    All_type              optionalValue);
 
   int wmListAccess(
     WORKING_MEMORY_ACTION action,
     Frame                *frame,
-    All_type              optional_value);
+    All_type              optionalValue);
+
+  int wmNoteAccess(
+    WORKING_MEMORY_ACTION action,
+    const string        & note,
+    All_type              optionalValue);
 
   int      printList();
   All_type getStateValue(string state);
@@ -169,12 +212,14 @@ private:
 
   int memoryDump(string& returnString);
 
-  // these are the 3 main sections of the working memory
+  // these are the 4 main sections of the working memory
   StateTable  stateTable;
   HistoryList promptHistory;
   PackingList packingList;
+  ListNotes   listNotes;
 
-  Latex *latex;
+  // output objects for final document
+  Latex latex;
 };
 
 #endif // ifndef WORKING_MEMORY_H
