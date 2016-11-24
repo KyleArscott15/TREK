@@ -1,53 +1,78 @@
 TREK Todo
 
-3. Create notes for each item and a way to specify quantity
-4. Abstract all of the knowledge base rules to remove all warnings from compilation
-5. Create interfaces for rules. Rule specification language
-8. Save prompt history and allow user to print that out on the second page so they know the rational for asking for certian items.
+1. Create a frame-description format
+2. Create a rule-description format; distill their function into a compact format
+3. Create rules that check for volume and weight restrictions, suggest how to pack the kayak or your backpack (because there is a right way)
+   This means actual implementing the Slots in the Frames, such as background worker threads
+4. Explanation facility: Save prompt history and allow user to print that out on the second page so they know the rationale for asking for certian items.
+	-allow user to trace why:
+		-certain comments were put under the notes section
+		-quantity of each item
+		-which question response lead to suggestion of a certain frame, and why
+	-read pg 209-210 of IES
+	-explanation facility for synchronous rules is simple. A small amount of english text accompanies the antecedant, same for the action,
+	 which outlines why it is activated and why it suggests these items. This is part of the rule definition.
+	 At the end of consultation, there will be a linked-list of PromptHistory objects which outline which rules fired, in what order.
+	 We can extract the english text from the rules.
+	 When user wants to know why a question was asked, they should be given the antecendant explanation.
+	 When user wants to know why a change (add/delete/modify) was made to WM, we give them the antedendant and action explanation
+	 of each rule that had a hand in affecting that part of the wm. This involved backward chaining.
+	 ex. User wants to know why 2 paddles: 1 150cm long and the other 160 cm long. It would say: because one person was taller than the other, which was asked because you said 2 people were on this kayaking trup, because that part of wm was created because
+	 you said you were kayaking, and because this program was started (this just illustrated the backward chaining)
+	 For TREK, this is as deep as the explanation facility can go, because we do not have processing rules.
+	 If we had processing rules, we would have to explain why things were changing even when we did not give input.
+	 Section 14.2.1 (pg 210) of IES says explanation facility should answer 1., 2. 3. We can only do 1. and can do part of 3. by modifying
+	 the english text in this facility. We cannot do #2 (probably because of no processing rules).
+	 There should be a new mode that the shell interface takes on when you need explanation. ex. use built-in command "ex[plain]"
+	 to drop into a text-driven menu where you can ask questions about the interview.
+	 When in the "ex" subshell, you will be given a series of questions to narrow the question down, but also to give it structure.
+	 ex. you just typed "ex" and are in the explanation sub-shell. Then on the screen it says 
+	 a) Why was a question asked?
+	 b) Why a certain quantity of a frame?
+	 c) Why was a certain frame added to wm?
+	 You type "a", then press enter. Then it gives you every question in reverse order and then you press "b", then it gives you the 
+	 antecendant backward-chaining explanation of why that question was activated. Type "done" to exit sub-shell.
+5. Rules to add: number of people attending, then multiply some items in the WM packing list, meal-making rules?, antecedants of rules
+   are functions of external inputs so that rules don't just activate when the user responds to a question (a question-synchronous rule)
+   instead, for example, it will update gear in the packing list based on the weather of the set hiking calendar-date which changes based
+   on new weather information (an aynchornous rule) instead of questions. These are processing rules that run in the background all the time.
+   On second thought, I P and O rules can also be background...
+6. Frames to add: gloves, charts and maps, air lounge, barrels, spray skirt, binoculars, tin foil, butter oil, trowel,  synthetic pants, clothelines, book of knots, 
 
-Frames to add: gloves, charts and maps, air lounge, barrels, spray skirt, binoculars, tin foil, butter oil, trowel,  synthetic pants, clothelines, book of knots, 
+========================
 
-/* NOTES
+1. Can we use JSON, XML?
 
-   Strategies:
-   1. Before code is submitted it is run through standard test cases
-   2. TODO Code is unit tested using CPPUnit.
-   3. A continuous integration strategy is implemented in integrate.sh, which
-      follows the following steps
-   compile from scratch -> analyze code for taboos (magic numbers etc) -> static
-      code analyzers (ex. buffer overflow) -> unit test cases -> format code ->
-      commit code
-   4. Code can be compiled for either -DDEBUG or -DRELEASE. Development should
-      be done using -DDEBUG.
-   5. Code should be a 1:1 mapping between functional requirements and
-      implementation. References to external documentation should be made within
-      the code
+2.
+Quick Idea:
+Create all orthogonal operations with the working memory as options. ex. add to this section of wm, create new section of wm etc.
+Also, allow a rule to be a guard for a certain section of wm. So a rule wanting to add an item to the kayak first goes through the weightRestriction rule and it may strike down the suggestion.
+Alsom Input, processing, output rules
+Input: info from sensors, context from user, equipement on hand (and its properties: can we create frame profiles, details given to the abstract frames. ex. "shoes" is a frame, but the user does not have an abstract shoe on their foot, it's US size 13. ex. they have a stove, but theirs weighs 1.2 lbs, that should be taken into account when calculating weight, not the default value for stoves on the market)
+Processing: rules monitor working memory for information and when they see something that activates them they add/modify/remove information in the wm.
+ex. a part that is being designed is starting to get too heavy. A rule monitoring this activates, stops all other rules and starts to do optimizations based on the current design and it also looks at the series of steps taken to get to the current design to see which ones need to be changed for others.
+Output: values to be put into the screen like a result of a calculation, a complete design of a product in a cad document, actuator outputs
 
-   Tactics:
-   1. Do not use "assert" in your code.
-   2. Use "static_assert" where you can.
-   3. TODO A high-level exception catcher in main() should deal with all
-      uncaught exceptions, instead of termination (unless that's the right thing
-      to do)
-   4. TODO Mission-critical processesare run with a
-      "manager process" that will respawn the main process if it dies. It is
-      also responsible for reporting/logging issues.
-   5. Optimizations: functions that are small should use "inline"
-   6. Functions not throwing exceptions should make use of the qualifier
-      "noexcept"
-   7. TODO return types of all functions implemented in this source should
-      return an enum type that is very descriptive of the error/success type. Do
-      this instead of returning an int and wondering if "1" is success or
-      failure
-   8. Make use of the D* macros defined in this file to do code traces,
-      stack traces or print variable values. They only work when -DDEBUG is used
-      in CMakeLists.txt.
-   9. Interrupt-style code is favourable over polling code. ex. must refresh
-      image after processing on the last one is done instead of looping
-      continously and going out of sync
-   10. TODO there should be one memory allocation function in the entire src/,
-      so that it is easy to quantify and trace memory leaks
-   11. Syslog will track system errors (if we decide to use a unix-based
-      platform)
+Long Idea:
+When we come up with a format for a rule, we should attempt to solve the Knowledge Aquisition Problem that plagues expert systems.
+The problem is that it is hard to extract knowledge because it is sparse, unstructured, ambiguous etc. The best places to get it
+are living people, and they are considered masters therefore their time is extremely valuable to others and they can't spend forever
+dumping their brains over a series of interviews.
+A less demanded person should be in charged of archiving a domain. 
+This is their process:
+1. Learn as much of the field they can themself. They read books, attend lectures, take courses, design, build, test, buy products to aid in their understanding of the field. This will take 70% of the time. Watching masters can be done alone, without formal apprenticeship
+2. 20% of the time is spent interviewing masters or getting their feedback on the performance and justification of decisions made by the work-in-progess expert system that is meant to replace them. Watching masters is considered 1., not 2.
+3. 10% of the time spend turning knowledge into computer format, putting it into an expert system shell and testing alone.
+An expert system is a disseminated program, but it is much easier and compact to make a custom program to apply knowledge. So why put the effectively same program in expert system form? Scalability! As you learn new knowledge, or have to modify old knowledge, it's much easier if that knowledge is broken into pieces. You don't need to refactor the code to deal with new abstraction because a fully disseminated program is already fully abstracted, which means all you need to do is add a rule that creates an abstraction instead of retooling the inference engine (note, the inference engine should already have support for N-level meta-rules, rules that say when other rules can fire.)
+A non-techincal person should be able to input knowledge to the knowledge base. They will do it by answering a survery, and that survey will create the necessary modifications (potentially creating/updating many rules). This survery program will probably be an expert system itself.
+Here is the survery they might get:
 
- */
+Survey starts with what the knowledge will do, then it will get into how that will be done and when the knowledge is to be activated.
+
+a) Choose one: i) Will you add to WM ii) change wm iii) output from wm? 
+b) The wm of this expert system already has the sections i) _____ ii) ______ iii) ______ etc. (where the options are CAD model, table of values, physical environment, etc). Will your new knowledge modify any of these sections ? (choose all that apply)
+c) Will the new knowledge create a new section?
+d) Which sections of wm will this knowledge need to monitor in order to activate?
+
+3.
+Rope expert system. Capture the physical environment, possible ropes available (the persons situation, context) and come up with a suggestion of a few knots to use.

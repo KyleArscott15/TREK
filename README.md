@@ -50,6 +50,7 @@ Beware the omni-tool; it does not exist (the search for it will drive you mad)
 Beware the omni-rule; it is dangerous (corruption's hand is soft, then heavy).
 
 # References
-BESAT: Building Expert Systems: At Tutorial, James Martin & Steven Oxman,
+BESAT: Building Expert Systems: At Tutorial, James Martin & Steven Oxman
 IES: Introduction to Expert Systems, First Edition, Peter Jackson
+MTRP: Mastering the Requirements Process, Third Edition, Suzanne and James Robertson
 

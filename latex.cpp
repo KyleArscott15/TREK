@@ -87,7 +87,9 @@ int Latex::savePackingList(map<string,
     string line = string("");
     line += it->second.getName();
     line += string(" & ");
-    line += string("99999");          // itoa(it->second.getQuantity());
+    line += string("99999");          // xxx KA figure this out when I have
+                                      // internet
+                                      // itoa(it->second.getQuantity());
     printf("The Quantity is [%d]\n", it->second.getQuantity());
     line += string(" & ");
     line += it->second.getUserNote(); // optional[it->first].atToString();
