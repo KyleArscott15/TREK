@@ -1,45 +1,23 @@
-TREK Todo
+TREK TODO
+
+========================
+SUMMARY TODO LIST
 
 1. Create a frame-description format
 2. Create a rule-description format; distill their function into a compact format
 3. Create rules that check for volume and weight restrictions, suggest how to pack the kayak or your backpack (because there is a right way)
    This means actual implementing the Slots in the Frames, such as background worker threads
 4. Explanation facility: Save prompt history and allow user to print that out on the second page so they know the rationale for asking for certian items.
-	-allow user to trace why:
-		-certain comments were put under the notes section
-		-quantity of each item
-		-which question response lead to suggestion of a certain frame, and why
-	-read pg 209-210 of IES
-	-explanation facility for synchronous rules is simple. A small amount of english text accompanies the antecedant, same for the action,
-	 which outlines why it is activated and why it suggests these items. This is part of the rule definition.
-	 At the end of consultation, there will be a linked-list of PromptHistory objects which outline which rules fired, in what order.
-	 We can extract the english text from the rules.
-	 When user wants to know why a question was asked, they should be given the antecendant explanation.
-	 When user wants to know why a change (add/delete/modify) was made to WM, we give them the antedendant and action explanation
-	 of each rule that had a hand in affecting that part of the wm. This involved backward chaining.
-	 ex. User wants to know why 2 paddles: 1 150cm long and the other 160 cm long. It would say: because one person was taller than the other, which was asked because you said 2 people were on this kayaking trup, because that part of wm was created because
-	 you said you were kayaking, and because this program was started (this just illustrated the backward chaining)
-	 For TREK, this is as deep as the explanation facility can go, because we do not have processing rules.
-	 If we had processing rules, we would have to explain why things were changing even when we did not give input.
-	 Section 14.2.1 (pg 210) of IES says explanation facility should answer 1., 2. 3. We can only do 1. and can do part of 3. by modifying
-	 the english text in this facility. We cannot do #2 (probably because of no processing rules).
-	 There should be a new mode that the shell interface takes on when you need explanation. ex. use built-in command "ex[plain]"
-	 to drop into a text-driven menu where you can ask questions about the interview.
-	 When in the "ex" subshell, you will be given a series of questions to narrow the question down, but also to give it structure.
-	 ex. you just typed "ex" and are in the explanation sub-shell. Then on the screen it says 
-	 a) Why was a question asked?
-	 b) Why a certain quantity of a frame?
-	 c) Why was a certain frame added to wm?
-	 You type "a", then press enter. Then it gives you every question in reverse order and then you press "b", then it gives you the 
-	 antecendant backward-chaining explanation of why that question was activated. Type "done" to exit sub-shell.
 5. Rules to add: number of people attending, then multiply some items in the WM packing list, meal-making rules?, antecedants of rules
    are functions of external inputs so that rules don't just activate when the user responds to a question (a question-synchronous rule)
    instead, for example, it will update gear in the packing list based on the weather of the set hiking calendar-date which changes based
    on new weather information (an aynchornous rule) instead of questions. These are processing rules that run in the background all the time.
    On second thought, I P and O rules can also be background...
-6. Frames to add: gloves, charts and maps, air lounge, barrels, spray skirt, binoculars, tin foil, butter oil, trowel,  synthetic pants, clothelines, book of knots, 
+6. Frames to add: gloves, charts and maps, air lounge, barrels, spray skirt, binoculars, tin foil, butter oil, trowel,  synthetic pants, clothelines, book of knots.
 
 ========================
+EXPANDED TODO LIST
+Numbers here reference the corresponding number in the SUMMARY TODO LIST
 
 1. Can we use JSON, XML?
 
@@ -75,4 +53,32 @@ c) Will the new knowledge create a new section?
 d) Which sections of wm will this knowledge need to monitor in order to activate?
 
 3.
-Rope expert system. Capture the physical environment, possible ropes available (the persons situation, context) and come up with a suggestion of a few knots to use.
+
+4.
+allow user to trace why:
+	-certain comments were put under the notes section
+	-quantity of each item
+	-which question response lead to suggestion of a certain frame, and why
+	-read pg 209-210 of IES
+	-explanation facility for synchronous rules is simple. A small amount of english text accompanies the antecedant, same for the action,
+	 which outlines why it is activated and why it suggests these items. This is part of the rule definition.
+	 At the end of consultation, there will be a linked-list of PromptHistory objects which outline which rules fired, in what order.
+	 We can extract the english text from the rules.
+	 When user wants to know why a question was asked, they should be given the antecendant explanation.
+	 When user wants to know why a change (add/delete/modify) was made to WM, we give them the antedendant and action explanation
+	 of each rule that had a hand in affecting that part of the wm. This involved backward chaining.
+	 ex. User wants to know why 2 paddles: 1 150cm long and the other 160 cm long. It would say: because one person was taller than the other, which was asked because you said 2 people were on this kayaking trup, because that part of wm was created because
+	 you said you were kayaking, and because this program was started (this just illustrated the backward chaining)
+	 For TREK, this is as deep as the explanation facility can go, because we do not have processing rules.
+	 If we had processing rules, we would have to explain why things were changing even when we did not give input.
+	 Section 14.2.1 (pg 210) of IES says explanation facility should answer 1., 2. 3. We can only do 1. and can do part of 3. by modifying
+	 the english text in this facility. We cannot do #2 (probably because of no processing rules).
+	 There should be a new mode that the shell interface takes on when you need explanation. ex. use built-in command "ex[plain]"
+	 to drop into a text-driven menu where you can ask questions about the interview.
+	 When in the "ex" subshell, you will be given a series of questions to narrow the question down, but also to give it structure.
+	 ex. you just typed "ex" and are in the explanation sub-shell. Then on the screen it says 
+	 a) Why was a question asked?
+	 b) Why a certain quantity of a frame?
+	 c) Why was a certain frame added to wm?
+	 You type "a", then press enter. Then it gives you every question in reverse order and then you press "b", then it gives you the 
+	 antecendant backward-chaining explanation of why that question was activated. Type "done" to exit sub-shell.

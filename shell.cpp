@@ -64,16 +64,6 @@ string Shell::getBuiltInCommands() {
   commands += string(", ");
   commands += string(PRINT_LIST);
 
-  /*
-     xxx KA TODO
-     for (map<string, Frame>::iterator it = builtInCommands.begin();
-         it != builtInCommands.end();
-     ++it) {
-      commands += it->first;
-      commands += string(", ");
-     }
-   */
-
   return commands;
 }
 
@@ -118,10 +108,6 @@ void Shell::run() {
   int      prompt_success;
   All_type cleanResponse;
 
-  // A a;
-  // B b;
-  // A *p;
-
   Rule r;
   HikeDistanceRule hdr;
 
@@ -131,15 +117,6 @@ void Shell::run() {
     response.clear();
     prompt_success = ~SCANF_SUCCESS;
 
-    // p = &a;
-    // p->print_me();
-    // p = &b;
-    // p->print_me();
-    // rule = &r;
-    // printf("Answer to rule [%d]\n", r.evaluateAntecendant());
-    // rule = &hdr;
-    // printf("Answer to hdr [%d]\n",  hdr.evaluateAntecendant());
-
     if (ie->inferNextRule(&rule, wm) < SUCCESS) {
       printf("No rule is true.\n");
       ui->issueBuiltInPrompt(response, getBuiltInCommands());
@@ -148,19 +125,6 @@ void Shell::run() {
       // goto end_of_loop;
       goto processBuiltIn;
     }
-
-    // printf("[%s()][%s][%d]\n", __FUNCTION__, __FILE__, __LINE__);
-    // fflush(stdout);
-    // sleep(1);
-    // rule2 = *rule;
-    // rule2.evaluateAntecendant();
-    // printf("[%s()][%s][%d]\n", __FUNCTION__, __FILE__, __LINE__);
-
-    // printf("String: [%s]\n",
-    //   ((HikeDistanceRule)rule2).getPrompt().c_str());
-    // fflush(stdout);
-    // sleep(1);
-
 
     if (rule != NULL) {
       ui->issuePrompt(rule, response);
@@ -196,6 +160,9 @@ processBuiltIn:
     continue;
 
 end_of_loop:
+
+    // small delay between screen prompts
+    // so that user is triggered by new data
     usleep(500000);
   }
 

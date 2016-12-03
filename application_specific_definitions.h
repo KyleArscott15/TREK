@@ -34,8 +34,9 @@ int cool_ascii_name() {
 int welcome() {
   cool_ascii_name();
 
-  //system(
-  //  "cowsay -f stegosaurus Welcome to TREK, your packing buddy and expert system");
+  // system(
+  //  "cowsay -f stegosaurus Welcome to TREK, your packing buddy and expert
+  // system");
     printf("\n\nWelcome to TREK, your packing buddy and expert system\n");
     printf("Loading knowledge");
 

@@ -9,16 +9,6 @@ int Latex::savePackingList(map<string,
                                Frame>list,
                            map<string, All_type>optional,
                            vector<string>notes) {
-  /*
-   # replace all references to COMPANY to the one provided
-     sed -i.bak s/$magicword_company/"$COMPANY"/g $resume_name$ext
-     sed -i.bak s/$magicword_location/"$LOCATION"/g $resume_name$ext
-     sed -i.bak s/$magicword_job/"$JOB"/g $resume_name$ext
-
-   # remove the .bak files created by sed
-     rm *$resume_name$ext.bak
-   */
-
   string latexAll = string("");
 
   string latexBegin = string(
@@ -82,17 +72,12 @@ int Latex::savePackingList(map<string,
   for (map<string, Frame>::iterator it = list.begin();
        it != list.end();
        ++it) {
-    // \textbf{Item} & \\textbf{Quantity} & \\textbf{Notes about Item} \\
-    // \\hline  \n"
     string line = string("");
     line += it->second.getName();
     line += string(" & ");
-    line += string("99999");          // xxx KA figure this out when I have
-                                      // internet
-                                      // itoa(it->second.getQuantity());
-    printf("The Quantity is [%d]\n", it->second.getQuantity());
+    line += to_string(it->second.getQuantity());
     line += string(" & ");
-    line += it->second.getUserNote(); // optional[it->first].atToString();
+    line += it->second.getUserNote();
     line += string(" \\ \\hline \n");
 
     latexAll += line;

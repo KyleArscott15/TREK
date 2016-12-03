@@ -168,8 +168,6 @@ int WorkingMemory::memoryDump(string& returnString) {
   cout << endl;
   cout << "WORKING MEMORY" << endl;
 
-  // HLINE();
-
   cout << "State Table: " << endl;
 
   for (StateTable::iterator it = stateTable.begin(); it != stateTable.end();
@@ -177,15 +175,8 @@ int WorkingMemory::memoryDump(string& returnString) {
     cout << it->first << " => " << it->second << '\n';
   }
 
-  // HLINE();
   cout << endl;
   cout << endl;
-
-  // cout << output;
-
-  // if (returnString != NULL) {
-  //  returnString = output;
-  // }
 
   return SUCCESS;
 }
@@ -195,12 +186,6 @@ int WorkingMemory::printList() {
 }
 
 int WorkingMemory::saveList(string filename) {
-  /*
-     std::ofstream ofs;
-
-     ofs.open(filename.c_str(), std::ofstream::out | std::ofstream::trunc);
-   */
-
   latex.savePackingList(
     packingList.getPackingList(),
     packingList.getPackingListOptional(), listNotes.getNotes());
@@ -217,7 +202,5 @@ int WorkingMemory::saveList(string filename) {
   memcpy(buffer, list.c_str(), list.length());
   write(fd, buffer, strlen(buffer));
   close(fd);
-
-  // ofs.close();
 }
 

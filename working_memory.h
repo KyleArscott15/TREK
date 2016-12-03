@@ -99,26 +99,7 @@ public:
   }
 
   int printList() {
-    /*
-       cout << endl;
-       cout << "PACKING LIST" << endl;
-       HLINE();
-
-       cout << "Packing List Table: " << endl;
-
-       for (map<string, Frame>::iterator it = packingList.begin();
-         it != packingList.end();
-       ++it) {
-       cout << it->first << " => " << it->second << '\n';
-       }
-
-       HLINE();
-       cout << endl;
-       cout << endl;
-     */
-
     cout << returnList();
-
     return SUCCESS;
   }
 

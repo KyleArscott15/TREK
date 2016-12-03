@@ -590,32 +590,6 @@ vector<Rule *>KnowledgeBase::contendingRules(WorkingMemory *wm)
 
 // input rules
 
-/*
-   #define INPUT_RULE_IMPLEMENTATION(ruleName, prompt,                      \
-                                  antecendant, action, promptResponse)   \
-   ruleName::ruleName() : Rule() {                                        \
-    ruleName     = string("ruleName");                                   \
-    ruleType     = INPUT_RULE;                                           \
-    responseType = TYPE_BOOL;                                            \
-    setFormat("%s\n");                                                   \
-    setPrompt("prompt");                                                 \
-    setProperty(ONE_SHOT, true);                                         \
-   }                                                                      \
-   ruleName::~ruleName() {}                                               \
-   bool ruleName::evaluateAntecendant(WorkingMemory * wm) {               \
-    antecendant;                                                         \
-   }                                                                      \
-   bool ruleName::evaluateAction(WorkingMemory * wm) {                    \
-    action;                                                              \
-   }                                                                      \
-   int ruleName::setPromptResponseToWM(All_type at, WorkingMemory * wm) { \
-    promptResponse;                                                      \
-   }
-
-   #define INPUT_RULE_IMPLEMENTATION(HikeTrueRule, Are you hiking ? ,
-   return true, return false, return wm->wmStateAccess(WM_ADD, HIKE_TRUE, at));
- */
-
 HikeTrueRule::HikeTrueRule() : Rule() {
   ruleName     = string("HikeTrueRule");
   ruleType     = INPUT_RULE;

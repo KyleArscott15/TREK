@@ -23,7 +23,7 @@ enum TIER_TYPE
   IMPLEMENTED_TIER
 };
 
-// XXX KA State objects will not be used in version 1
+// State objects will not be used in version 1
 class State {
 public:
 

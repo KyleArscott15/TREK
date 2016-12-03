@@ -4,8 +4,10 @@ An expert system shell, using rules and frames, to help pack camping, hiking and
 # How to compile and run, to get a fresh start
 make clean && ./b
 
-# How to normally compile and run, normally
+# How to compile and run, normally
 ./b
+*run the program, then type "exit" when done*
+./v to view the generated PDF of the packing list
 
 # Dependencies
 pdflatex
