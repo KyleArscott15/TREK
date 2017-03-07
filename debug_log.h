@@ -43,7 +43,7 @@ using namespace std;
 # define DNAMESPACE()
 # define DDECLARE()
 # define DINIT()
-# define DPRINT()
+# define DPRINT(...)
 # define DPRINTF()
 # define DMETHOD()
 # define DVAR(msg, var)

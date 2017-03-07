@@ -19,4 +19,3 @@ int InferenceEngine::inferNextRule(Rule **rule, WorkingMemory *wm) {
   }
   return NO_MATCH;
 }
-

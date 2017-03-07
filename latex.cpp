@@ -1,5 +1,6 @@
 #include "latex.h"
 #include <fcntl.h>
+#include <unistd.h>
 
 Latex::Latex() {}
 
@@ -119,4 +120,3 @@ int Latex::savePackingList(map<string,
 
   return -1;
 }
-

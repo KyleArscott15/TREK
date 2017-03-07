@@ -4,7 +4,7 @@
 CC=gcc #arm-linux-gnueabi-gcc#gcc
 CXX=g++ #arm-linux-gnueabihf-g++-4.6#arm-linux-gnueabi-g++#g++
 RM=rm -f
-CPPFLAGS += -DDEBUG -I. -std=c++0x -g #-std=gnu++0x #-Wall -Weffc++
+CPPFLAGS += -I. -std=c++0x -g # -DDEBUG -I/usr/include/x86_64-linux-gnu/ # -std=gnu++0x #-Wall -Weffc++
 LDLIBS += -lpthread
 
 FINAL_EXECUTABLE_NAME=trek

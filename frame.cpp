@@ -32,4 +32,3 @@ bool Frame::setUserNotes(string notes) {
   userNotesAboutFrame = notes;
   return true;
 }
-

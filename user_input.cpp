@@ -101,4 +101,3 @@ All_type UserInput::parseResposeForRule(Rule  *rule,
 
   return at;
 }
-

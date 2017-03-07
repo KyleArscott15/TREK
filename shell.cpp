@@ -30,9 +30,9 @@ int Shell::endConsultation() {
 }
 
 int Shell::usage() {
-         printf("\n");
-         printf("Run with no arguments.\n");
-         printf("Built-in commands can be used at any time: [%s]\n",
+  printf("\n");
+  printf("Run with no arguments.\n");
+  printf("Built-in commands can be used at any time: [%s]\n",
          getBuiltInCommands().c_str());
 }
 
@@ -168,4 +168,3 @@ end_of_loop:
 
   endConsultation();
 }
-

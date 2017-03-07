@@ -52,7 +52,7 @@ int WorkingMemory::wmStateAccess(
   return SUCCESS;
 }
 
-int  WorkingMemory::wmListAccess(
+int WorkingMemory::wmListAccess(
   WORKING_MEMORY_ACTION action,
   Frame                *frame,
   All_type              optionalValue) {
@@ -105,7 +105,7 @@ int  WorkingMemory::wmListAccess(
   return SUCCESS;
 }
 
-int  WorkingMemory::wmNoteAccess(
+int WorkingMemory::wmNoteAccess(
   WORKING_MEMORY_ACTION action,
   const string        & note,
   All_type              optionalValue) {
@@ -203,4 +203,3 @@ int WorkingMemory::saveList(string filename) {
   write(fd, buffer, strlen(buffer));
   close(fd);
 }
-

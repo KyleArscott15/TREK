@@ -46,4 +46,3 @@ BooleanState::~BooleanState() {}
 STATE_TYPE BooleanState::getStateType() {
   return BOOLEAN_STATE;
 }
-

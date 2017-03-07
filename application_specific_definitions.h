@@ -1,4 +1,4 @@
-#ifndef APPLICATION_SPECIFIC_H
+  #ifndef APPLICATION_SPECIFIC_H
 #define APPLICATION_SPECIFIC_H
 
 #define PACKING_LIST_FILENAME string("trek_packing_list.txt")
