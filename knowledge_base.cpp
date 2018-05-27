@@ -99,6 +99,7 @@ map<string, string>KnowledgeBase:: notes = KnowledgeBase::initializeNotes();
 #define EXTRA_SOCKS   string("extra socks")
 #define DRY_FIT_SHIRT   string("dry-fit shirt")
 #define DRY_FIT_SHORTS   string("dry-fit shorts")
+#define HAND_SANITIZER string("hand-sanitizer")
 
 // car camping list
 #define GROUND_COVER            string("ground cover")
@@ -177,6 +178,7 @@ map<string, Frame>KnowledgeBase::initializeFrames()
     extraSocks,
     dryFitShirt,
     dryFitShorts,
+    handSanitizer,
 
     groundCover,
     airMattress,
@@ -307,6 +309,9 @@ map<string, Frame>KnowledgeBase::initializeFrames()
   dryFitShorts.setName(DRY_FIT_SHORTS);
   dryFitShorts.setQuantity(2);
 
+  handSanitizer.setName(HAND_SANITIZER);
+  handSanitizer.setUserNotes("To wash hands after Nature's Call has been answered.");
+
   groundCover.setName(GROUND_COVER);
   groundCover.setUserNotes(
     "Put a ground cover under the tent to prevent condensation from the ground.");
@@ -374,6 +379,7 @@ map<string, Frame>KnowledgeBase::initializeFrames()
   bcl.push_back(extraSocks);
   bcl.push_back(dryFitShirt);
   bcl.push_back(dryFitShorts);
+  bcl.push_back(handSanitizer);
   basicCampingList.setCollection(bcl);
 
   vector<Frame> bhl;
@@ -466,6 +472,7 @@ map<string, Frame>KnowledgeBase::initializeFrames()
   frames[EXTRA_SOCKS]        = extraSocks;
   frames[DRY_FIT_SHIRT]      = dryFitShirt;
   frames[DRY_FIT_SHORTS]     = dryFitShorts;
+  frames[HAND_SANITIZER]     = handSanitizer;
 
   frames[GROUND_COVER]            = groundCover;
   frames[AIR_MATTRESS]            = airMattress;
